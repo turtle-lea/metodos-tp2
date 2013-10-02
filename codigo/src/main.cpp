@@ -2,6 +2,7 @@
 #include<fstream>
 #include<vector>
 #include "../include/bridge.h"
+#include "../include/BandMatrix.h"
 
 using namespace std;
 

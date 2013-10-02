@@ -66,28 +66,86 @@ BandMatrix::BandMatrix(double cos_theta_1,double sen_theta_1, double cos_theta_2
 		}
 	}
 	
-	/** C n/2 -1_h -> F9 F10 F14 F13*/
+	/** C n/4 -1_h -> F9 F10 F14 F13*/
 	int medio = n/2 - 2;
 	elem[medio][2] = -1; //-Fmedio-1
 	elem[medio][3] = -cos_theta_1; //-cos(theta1)Fmedio
-	elem[medio][6] = -1; //Fmedio+3
+	elem[medio][6] = 1; //Fmedio+3
 	elem[medio][7] = cos_theta_1; //cos(theta1)Fmedio+4
 		
-	/** C n/2 -1_v -> F10 F12 F14*/
+	/** C n/4 -1_v -> F10 F12 F14*/
 	medio++;
 	elem[medio][2] = sen_theta_1; //sen(theta1)Fmedio-1	
 	elem[medio][4] = 1; //Fmedio+1
-	elem[medio][7] = sen_theta_1; //sen(theta1)Fmedio+4
+	elem[medio][6] = sen_theta_1; //sen(theta1)Fmedio+3
 	
-	/** C n/2_h -> F3 F6 F7*/
-	elem[4][2] = -sen_theta_2; // - sen(theta2)*F3
-	elem[4][5] = sen_theta_2; //F2
-	elem[4][6] = 1; //+F7
+	/** C n/4_h -> F11 F15*/
+	medio++; 
+	elem[medio][2] = -1; // -Fmedio-1
+	elem[medio][6] = 1; // Fmedio+3
+
 	
-	/** C n/2_v -> F3 F4 F6*/
-	elem[5][1] = -1; //-F4
-	elem[5][2] = -cos_theta_2; //-cos(theta2)F3
-	elem[5][4] = -cos_theta_2; //-cos(theta2)F6
+	/** C n/4_v -> F12*/
+	medio++;
+	elem[medio][2] = -1; //-Fmedio-1
 	
+	medio++;
+	
+	for(int i = medio ; i < n-6 ; i = i+2){
+		estoy_abajo = i % 4;
+		int j = i+1;
+		if(estoy_abajo != 0){
+			//horizontales
+			elem[i][2] = -1; //-Fi-1 
+			elem[i][6] = 1; // Fi+3
+			elem[i][7] = cos_theta_1; // cos(theta1)Fi+4
+			//verticales
+			elem[j][4] = 1; //Fj+1
+			elem[j][6] = sen_theta_1; //sen(theta1)Fj+3
+		}else{
+			//horizontales
+			elem[i][1] = sen_theta_2; //-sen(theta2)Fi-2
+			elem[i][2] = -1; //-Fi-1 
+			elem[i][6] = 1; //+Fi+3
+			//verticales
+			elem[j][0] = -cos_theta_2; //-cos(theta2)Fj-3	
+			elem[j][2] = -1; //-Fj-1
+		}
+	}
+	
+	/** Cn/2-3_h */
+	elem[n-6][2] = -1; //-Factual-1
+	elem[n-6][6] = 1; //Factual+3
+	
+	/** Cn/2-3_v */
+	elem[n-5][4] = 1; //Factual+1
+	
+	/** Cn/2-2_h */
+	elem[n-4][1] = -sen_theta_2; //-sen(theta2)Factual-2
+	elem[n-4][2] = -1; //-Factual-1
+	elem[n-4][5] = sen_theta_2; //sen(theta2)Factual+2
+	
+	/** Cn/2-2_v */ 
+	elem[n-3][0] = -cos_theta_2; //-cos(theta2)Factual-3
+	elem[n-3][2] = -1; //-Factual-1
+	elem[n-3][5] = -cos_theta_2; //-cos(theta2)Factual+1
+	
+	/** Cn/2-1_h */
+	elem[n-2][2] = -1; // -Factual-1
+	elem[n-2][3] = -cos_theta_1; // -cos(theta1)Factual
+
+	/** Cn/2-1_v */
+	elem[n-1][2] = sen_theta_1; //sen(theta1)Factual-1
+	elem[n-1][3] = 1; //Factual
+	
+}
+
+void BandMatrix::mostrar(){
+	for(int i = 0; i < elem.size(); i++){
+		for(int j = 0; j < 8; j++){
+			cout << elem[i][j] << " || ";
+		}
+		cout << endl;
+	}
 	
 }

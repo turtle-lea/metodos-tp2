@@ -5,10 +5,16 @@
 using namespace std;
 
 void Bridge::mostrar(){
-	cout << h << " " << l << " " << n << endl;	
+	
+	/*cout << "altura " << h << ", longitud " << l << ", " << n << " secciones."<< endl;	
+	cout << "cargas: ";
 	for(int i=0; i<cargas.size(); i++){
-		cout << cargas[i] << endl;
+		cout << cargas[i] << " ";
 	}
+	cout << endl;
+	*/
+	banda->mostrar();
+	
 }
 
 
