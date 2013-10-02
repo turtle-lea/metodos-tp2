@@ -138,6 +138,9 @@ BandMatrix::BandMatrix(double cos_theta_1,double sen_theta_1, double cos_theta_2
 	elem[n-1][2] = sen_theta_1; //sen(theta1)Factual-1
 	elem[n-1][3] = 1; //Factual
 	
+	/** Construida la matriz rectangular elem */
+	
+	
 }
 
 void BandMatrix::mostrar(){
