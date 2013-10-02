@@ -1,0 +1,16 @@
+#Compiled source#
+
+*.o
+*.pyc
+
+#Logs and databases#
+
+*.log
+
+#Misc files#
+*.directory
+*.*~
+*.*.backup
+*.aux
+*.toc
+*.out
