@@ -8,6 +8,15 @@ que respresentarán las variables).
 Al mismo tiempo queremos que las juntas en donde interviene un determinado link no queden lejos entre sí (Eso implica una buena numeración sobre las juntas de la estructura, que respresentarán las filas).
 En primer lugar, para encontrar la matriz banda $B_{p,q}$ dibujamos un puente Pratt Truss de 8 secciones y miramos fijamente la estructura tratando de realizar deducciones al respecto.
 
+\begin{figure}[!h]
+	\begin{center}
+		  \includegraphics[keepaspectratio]{Imagenes/im_3.pdf}
+		  \caption{Cada nuevo par de juntas introduce 4 nuevas fuerzas}
+		  \label{fig:contra1}
+	\end{center}
+\end{figure}
+\FloatBarrier
+
 Si miramos a las juntas de a pares verticales: \{c1,c2\}, \{c3,c4\}, \ldots podemos advertir que por cada nuevo par se presentan 4 nuevas fuerzas. A su vez, cada una de las juntas tiene asociada 2 ecuaciones
 del sistema (Uno para las fuerzas horizontales y otro para las verticales). Entonces podemos pensar que se introducen 4 nuevas variables cada 4 ecuaciones (1 por ecuación). Por lo tanto, es razonable pensar
 que con la numeración correcta podemos llegar a obtener una matriz banda $B_{p,q}$, ya que los coeficientes distintos de cero se concentrarían alrededor de la diagonal. Además, un determinado link solo actúa 
@@ -23,6 +32,92 @@ forma creciente de izquierda a derecha, y de abajo hacia arriba, tal como está 
 \end{figure}
 \FloatBarrier
 
+Con dicha numeración, renombrando $junta_{i}=c_{i}$ y $link_{j}=f_{j}$, las primeras 6 ecuaciones (correspondientes a las primeras 3 juntas) del sistema lineal obtenido serían:
+
+Ecuación 0: $c_{0} \ = 1*h_{0} + 0*v_{0} + 1*f_{2} + cos(\theta_{1})*f3 + 0*f_{4} + 0*f{5} + 0*f{6} + 0*f_{7} \ldots$
+
+Ecuación 1: $c_{0} v = 0* h_{0} + 1*v_{0} + 0*f_{2} + sen(\theta_{1})*f3 + 0*f_{4} + 0*f{5} + 0*f{6} + 0*f_{7} \ldots$
+
+Ecuación 2: $c_{1} \ = 0* h_{0} + 0*v_{0} - 1*f_{2} + 0*f3 + 0*f_{4} + 1*f{5} + 0*f{6} + 0*f_{7} \ldots$
+
+Ecuación 3: $c_{1} v = 0* h_{0} + 0*v_{0} - 0*f_{2} + 0*f3 + 1*f_{4} + 0*f{5} + 0*f{6} + 0*f_{7} \ldots$
+
+Ecuación 4: $c_{2}  \ = 0* h_{0} + 0*v_{0} - 0*f_{2} - sen(\theta_{2})*f3 + 0*f_{4} + 0*f{5} + sen(\theta_{2})*f{6} + 1*f_{7} \ldots$
+
+Ecuación 5: $c_{2}v  \ = 0* h_{0} + 0*v_{0} - 0*f_{2} - cos(\theta_{2})*f3 - 1*f_{4} + 0*f{5} + cos(\theta_{2})*f{6} + 0*f_{7} \ldots$
+
+~
+
+Los siguientes pares de ecuaciones (luego de analizar las primeras tres juntas, y antes de llegar a las de la mitad de la estructura) comparten una especie de patrón. Notemos en primer lugar que los números
+de las ecuaciones correspondientes a analizar la junta $c_{i}$ son $2*i$, correspondiente al plano horizontal y $2*(i+1)$, correspondiente al plano vertical. Además debemos considerar también si la junta es 
+inferior o superior.
+
+Si $c_{i}$ es junta inferior, entonces:
+
+Ecuación $(2*i)$ \ \ \ \ \  : $c_{i} = -1*f_{2i-1} - cos(\theta_{1})*f_{2i} + 0*f_{2i+1} + 0*f_{2i+2} + 1*f_{2i+3}$   
+
+Ecuación $(2*i+1)$ : $c_{i} v = sen(\theta_{1})*f_{(2i+1)-1} + 0*f_{2i+1} + 1*f_{(2i+1)+1} + 0*f_{(2i+1)+2} + 0*f_{(2i+1)+3}$
+
+~
+
+Si por el contrario, $c_{i}$ es junta superior entonces:
+
+Ecuación $(2*i)$ \ \ \ \ \  : $c_{i} = -1*f_{2i-1} + 0*f_{2i} + 0*f_{2i+1} + sen(\theta_{2})*f_{2i+2} + 1*f_{2i+3}$   
+
+Ecuación $(2*i+1)$ : $c_{i} v = -1*f_{(2i+1)-1} + 0*f_{2i+1} - cos(\theta_{2})*f_{(2i+1)+1} + 0*f_{(2i+1)+2} + 0*f_{(2i+1)+3}$
+
+~
+
+Las ecuaciones de las juntas del medio: $c_{n-1}$ la inferior y $c_{n}$ la superior deben ser planteadas aparte ya que son distintas al resto:
+
+~
+
+Inferior:
+
+Ecuación $(2(n-1))$ : $c_{n-1} = -1*f_{2(n-1)-1} - cos(\theta_{1})*f_{2(n-1)} + 0*f_{2(n-1)+1} + 0*f_{2(n-1)+2} + 1*f_{2(n-1)+3} + cos(\theta_{1})*f_{2(n-1)+4}$ \\  
+
+Ecuación $(2n-1)$ : $c_{n-1} v = -sen(\theta_{1})*f_{(2n-1)-1} + 0*f_{2n-1} + 1*f_{(2n-1)+1} + 0*f_{(2n-1)+2} + sen(\theta_{1})*f_{(2n-1)+3}$
+
+~
+
+Superior:
+
+Ecuación $(2n)$ : $c_{n} = -1*f_{2n-1} + 0*f_{2n)} + 0*f_{2n+1} + 0*f_{2n+2} + 1*f_{2n+3}$ \\  
+
+Ecuación $(2n+1)$ : $c_{n} v = -1*f_{(2n+1)-1} + 0*f_{2n+1} + 0*f_{(2n+1)+1} + 0*f_{(2n+1)+2} + 0*f_{(2n+1)+3}$
+
+~
+
+Los siguientes pares de ecuaciones vuelven a compartir un patrón (al igual que en la primera parte). Esto sucede para todos los pares restantes, con excepción del último:  
+
+~
+
+Si $c_{i}$ es junta inferior, entonces:
+
+Ecuación $(2*i)$ \ \ \ \ \  : $c_{i} = -1*f_{2i-1} + 0*f_{2i} + 0*f_{2i+1} + 0*f_{2i+2} + 1*f_{2i+3} + cos(\theta_{1})*f_{2i+4}$   
+
+Ecuación $(2*i+1)$ : $c_{i} v = 0*f_{(2i+1)-1} + 0*f_{2i+1} + 1*f_{(2i+1)+1} + 0*f_{(2i+1)+2} + sen(\theta_{1})*f_{(2i+1)+3}$
+
+~
+
+Si por el contrario, $c_{i}$ es junta superior entonces:
+
+
+~
+
+Finalmente, quedan analizar por separado las últimas 3 juntas: el par \{$c_{2n-3},c_{2n-2}$\} y $c_{2n-1}$: \\
+
+Ecuación $(2(2n-3))$ \ \ : $c_{2n-3} = -1*f_{2(2n-3)-1} + 0*f_{2(2n-3)} + 0*f_{2(2n-3)+1} + 0*f_{2(2n-3)+2} + 1*f_{2(2n-3)+3} $ \\
+
+Ecuación $(2(2n-3)+1 = 4n-5)$ : $c_{2n-3} v = 0*f_{(4n-5)} + 1*f_{(4n-5)+1} + 0*f_{(4n-5)+2} $ \\
+
+Ecuación $(2(2n-2))$ \ \ : $c_{2n-2} = -sen(\theta_{2})*f_{2(2n-2)-2} - 1*f_{2(2n-2)-1} + 0*f_{2(2n-2)} + 0*f_{2(2n-2)+1} + sen(\theta_{2})*f_{2(2n-2)+2} $ \\
+
+Ecuación $(2(2n-2)+1 = 4n-3)$ : $c_{2n-2} v = -cos(\theta_{2})*f_{(4n-3)-3} + 0*f_{(4n-3)-2} - 1*f_{(4n-3)-1} + 0*f_{(4n-3)} + cos(\theta_{2})*f_{(4n-3)+1} $ \\
+
+Ecuación $(2(2n-1))$ \ \ : $c_{2n-1} = -1*f_{2(2n-1)-1} - cos(\theta_{1})*f_{2(2n-1)} + 0*f_{2(2n-1)+1} + 0*f_{2(2n-1)+2}$ \\
+
+Ecuación $(2(2n-1)+1 = 4n-1)$ : $c_{2n-1} v = sen(\theta_{1})*f_{(4n-1)-1} + 1*f_{(4n-1)} + 0*f_{(4n-1)+1} + 0*f_{(4n-1)+2}$ \\
 
 
 \begin{figure}[!h]
