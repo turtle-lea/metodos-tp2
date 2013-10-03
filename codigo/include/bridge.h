@@ -25,12 +25,14 @@ class Bridge{
 			
 			///ya tenemos eso (cos y sen de theta)
 			
-			banda = new BandMatrix(cos_theta_1, sen_theta_1, cos_theta_2, sen_theta_2, 4*secciones);
+			banda = new BandMatrix(cos_theta_1, sen_theta_1, cos_theta_2, sen_theta_2, 4*secciones, cargas);
 			
 		}
+		
 		~Bridge(){
 			delete banda;
 		}
+		
 		void mostrar();
 	
 	private:
@@ -41,7 +43,9 @@ class Bridge{
 		double sen_theta_1;
 		double cos_theta_2;
 		double sen_theta_2;
+		
 		BandMatrix* banda;
+		
 		vector<double> cargas;		
 };
 

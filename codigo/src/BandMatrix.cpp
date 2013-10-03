@@ -4,7 +4,7 @@
 #include "../include/BandMatrix.h"
 using namespace std;
 
-BandMatrix::BandMatrix(double cos_theta_1,double sen_theta_1, double cos_theta_2,double sen_theta_2, int n){
+BandMatrix::BandMatrix(double cos_theta_1,double sen_theta_1, double cos_theta_2,double sen_theta_2, int n, const vector<double> cargas){
 	vector<double> v;
 	for(int i = 0; i < n; i++){
 		elem.push_back(v);
@@ -139,8 +139,23 @@ BandMatrix::BandMatrix(double cos_theta_1,double sen_theta_1, double cos_theta_2
 	elem[n-1][3] = 1; //Factual
 	
 	/** Construida la matriz rectangular elem */
+	/** Construimos el vector b acorde a la matriz */
 	
+	b.push_back(0.0);
+	b.push_back(0.0);
+	for(int i = 0; i < (n-4)/2; i++){
+		if((i%2) == 0)){
+			b.push_back(0.0);
+			b.push_back(cargas[i/2]);
+		}else{
+			b.push_back(0.0);
+			b.push_back(0.0);
+		}
+	}
+	b.push_back(0.0);
+	b.push_back(0.0);
 	
+	/* b = [0,0,0,c1,0,c2,0,c3...,0,cn/2-1,0,0] */
 }
 
 void BandMatrix::mostrar(){
