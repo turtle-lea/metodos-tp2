@@ -1,4 +1,5 @@
 #include <vector>
+#include <cmath>
 #include <iostream>
 #include <fstream>
 #include "../include/BandMatrix.h"
@@ -144,7 +145,7 @@ BandMatrix::BandMatrix(double cos_theta_1,double sen_theta_1, double cos_theta_2
 	b.push_back(0.0);
 	b.push_back(0.0);
 	for(int i = 0; i < (n-4)/2; i++){
-		if((i%2) == 0)){
+		if((i%2) == 0){
 			b.push_back(0.0);
 			b.push_back(cargas[i/2]);
 		}else{
@@ -165,5 +166,85 @@ void BandMatrix::mostrar(){
 		}
 		cout << endl;
 	}
+}
+
+vector<double> BandMatrix::resolver_sistema(){
+	vector<double> res_swaps;
+	vector<double> res;
+	double no_inicializado = -999999.0707;
+	double elem_diagonal;
+	int k = 0; int j; int h;
+	vector<double> aux;
+	double aux_2;
+	double m;
+	int counter = 0;
+
+	//Defino epsilon como 10**(-10)
+	double e = 0.0000000001;
+	int n = b.size();
+
+	//Inicializo vector res	y res_swaps
+	for(int i=0; i< n; i++){
+		res.push_back(no_inicializado);
+	}
+	for(int i=0; i < n; i++){
+		res_swaps.push_back(i);		
+	}
+
+	//Algoritmo de triangulacion de matriz:	
+	for(int i=0; i<26; i++){
+		//cout << "Termine fila " << i << endl;
+		elem_diagonal = elem[i][3];			
+		if (abs(elem_diagonal) < e){
+			k=1;	
+			//Encuentro la fila para swapear
+			while(k<=3 && k+i < n){
+				if(abs(elem[i+k][3-k]) > e) break;
+				k++;
+			}
+			
+			//swapeo fila i con fila k+i
+			aux = elem[k+i];	
+			elem[k+i] = elem[i];
+			elem[i] = aux;
+
+			//swapeo elem i de b con elem k+i
+			aux_2 = b[k+i];
+			b[k+i] = b[i];
+			b[i] = aux_2;
+			
+			//Guardo info equivalente a la matriz de permutacion
+			res_swaps[i] = k+i;
+			res_swaps[k+i] = i;
+		}
+		
+		j=1;
+		while(j<=3 && i+j<n){
+			//si estoy en la fila que swapee
+			if(j==k){
+				//Calculo el multiplicador
+				m = elem[i+j][3]/elem[i][3-k];
+				h=3;
+				while(h<8){
+					elem[i+j][h] = elem[i+j][h] - m*elem[i][h-k];
+					counter++;
+					h++;
+				}
+			} else{
+				//Calculo el multiplicador
+				m = elem[i+j][3-j]/elem[i][3-k];
+				h = 3-j;
+				while(h+j-k<8){
+					elem[i+j][h] = elem[i+j][h] - m*elem[i][h+j-k];
+					h++;
+					counter++;	
+				}
+			}
+			j++;
+		}	
+		
+	}
 	
+	mostrar();
+	return res;
 }
