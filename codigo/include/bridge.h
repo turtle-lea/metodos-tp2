@@ -34,7 +34,7 @@ class Bridge{
 		}
 		
 		void mostrar();
-		void resolver_sistema(){banda->resolver_sistema();}
+		vector<double> resolver_sistema(){banda->resolver_sistema();}
 	
 	private:
 		int h;

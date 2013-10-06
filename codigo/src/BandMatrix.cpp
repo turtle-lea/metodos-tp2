@@ -9,7 +9,7 @@ BandMatrix::BandMatrix(double cos_theta_1,double sen_theta_1, double cos_theta_2
 	vector<double> v;
 	for(int i = 0; i < n; i++){
 		elem.push_back(v);
-		for(int j = 0; j < 8; j++){
+		for(int j = 0; j < 11; j++){
 			elem[i].push_back(0.0);
 		}
 	}
@@ -161,8 +161,8 @@ BandMatrix::BandMatrix(double cos_theta_1,double sen_theta_1, double cos_theta_2
 
 void BandMatrix::mostrar(){
 	for(int i = 0; i < elem.size(); i++){
-		for(int j = 0; j < 8; j++){
-			cout << elem[i][j] << " || ";
+		for(int j = 0; j < 11; j++){
+			cout << elem[i][j] << "\t || ";
 		}
 		cout << endl;
 	}
@@ -173,11 +173,10 @@ vector<double> BandMatrix::resolver_sistema(){
 	vector<double> res;
 	double no_inicializado = -999999.0707;
 	double elem_diagonal;
-	int k = 0; int j; int h;
+	int k = 0; int j; int h; int q;
 	vector<double> aux;
 	double aux_2;
 	double m;
-	int counter = 0;
 
 	//Defino epsilon como 10**(-10)
 	double e = 0.0000000001;
@@ -192,10 +191,11 @@ vector<double> BandMatrix::resolver_sistema(){
 	}
 
 	//Algoritmo de triangulacion de matriz:	
-	for(int i=0; i<26; i++){
+	for(int i=0; i<n; i++){
 		//cout << "Termine fila " << i << endl;
 		elem_diagonal = elem[i][3];			
 		if (abs(elem_diagonal) < e){
+			//Fijarse si hace falta swapear.
 			k=1;	
 			//Encuentro la fila para swapear
 			while(k<=3 && k+i < n){
@@ -207,6 +207,41 @@ vector<double> BandMatrix::resolver_sistema(){
 			aux = elem[k+i];	
 			elem[k+i] = elem[i];
 			elem[i] = aux;
+
+			//shifteo fila i k posiciones a la derecha
+			vector<double> nuevo;
+			for(j=0; j<11; j++){
+				nuevo.push_back(0.0);
+			}
+			for(j=0; j<11-k; j++){
+				nuevo[j+k] = elem[i][j];
+			}
+			elem[i] = nuevo;
+
+			//shifteo fila (k+i) k posiciones a la izquierda
+			for(j=0; j<11; j++){
+				nuevo[j] = 0.0;
+			}
+			for(j=0; j<11-k; j++){
+				nuevo[j] = elem[i+k][j+k];
+			}
+			elem[i+k] = nuevo;
+
+			//imprimo fila i
+			/*
+			cout << "Fila i actualizada: " << endl;
+			for(int j=0; j<8; j++){
+				cout << elem[i][j] << " ";
+			}
+			cout << endl;
+
+			//imprimo fila k+i actualizada
+			cout << "fila k+i actualizada: " << endl;
+			for(int j=0; j<8; j++){
+				cout << elem[k+i][j] << " ";
+			}
+			cout << endl;
+			*/
 
 			//swapeo elem i de b con elem k+i
 			aux_2 = b[k+i];
@@ -221,30 +256,68 @@ vector<double> BandMatrix::resolver_sistema(){
 		j=1;
 		while(j<=3 && i+j<n){
 			//si estoy en la fila que swapee
-			if(j==k){
+			 if(j!=k){
 				//Calculo el multiplicador
-				m = elem[i+j][3]/elem[i][3-k];
-				h=3;
-				while(h<8){
-					elem[i+j][h] = elem[i+j][h] - m*elem[i][h-k];
-					counter++;
-					h++;
-				}
-			} else{
-				//Calculo el multiplicador
-				m = elem[i+j][3-j]/elem[i][3-k];
-				h = 3-j;
-				while(h+j-k<8){
-					elem[i+j][h] = elem[i+j][h] - m*elem[i][h+j-k];
-					h++;
-					counter++;	
+				if(abs(elem[i+j][3-j])>e){
+					
+					/*
+					for(int c=0; c<8; c++){
+						cout << elem[i+j][c] << " ";
+					}
+					cout << endl;	
+					*/
+					/*
+					cout << endl;
+					cout << "con elems: " << elem[i+j][3-j] <<" y " << elem[i][3-k] << endl;
+					cout << "Fila: " << i+j << endl;
+					*/
+					h = 3;
+					q = 3-j;
+					m = elem[i+j][q]/elem[i][h];
+					while(h<11 && q<11){
+						elem[i+j][q] = elem[i+j][q] - m*elem[i][h];
+						h++; q++;
+					}
 				}
 			}
 			j++;
 		}	
+		k=0;
 		
 	}
 	
-	mostrar();
+	backward_substitution(res,res_swaps);
+	for(int i=0; i<res.size(); i++){
+		cout << res[i] << endl;
+	}
 	return res;
 }
+
+void BandMatrix::backward_substitution(vector<double>& res, vector<double> res_swaps){
+	int n = b.size();
+
+	vector<double> nuevo;
+	for(int i=0; i<res.size();i++){
+		nuevo.push_back(0.0);
+	}
+
+	double acum;
+	for(int i=n-1; i>=0; i--){
+		acum = 0.0;
+		for(int j=1; j<= 7; j++){
+			if(i+j<n){
+				acum += elem[i][3+j]*res[i+j];
+			}	
+		}
+		res[i] = (b[i]-acum)/elem[i][3];
+	}
+	
+	for(int i=0; i<res_swaps.size(); i++){
+		nuevo[i] = res[res_swaps[i]];
+	}
+
+	res = nuevo;
+	cout << "Termine " << endl;
+}
+
+
