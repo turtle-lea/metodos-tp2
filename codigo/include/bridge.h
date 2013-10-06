@@ -9,7 +9,7 @@ using namespace std;
 
 class Bridge{
 	public:
-		Bridge(double altura,double largo,int secciones,vector<double> cs) : h(altura), l(largo), n(secciones), cargas(cs) {
+		Bridge(double largo,double altura,int secciones,vector<double> cs) : h(altura), l(largo), n(secciones), cargas(cs) {
 			double adyacente_theta_1 = largo/secciones;
 			double opuesto_theta_2 = adyacente_theta_1;
 			double adyacente_theta_2 = altura;
@@ -34,6 +34,7 @@ class Bridge{
 		}
 		
 		void mostrar();
+		void resolver_sistema(){banda->resolver_sistema();}
 	
 	private:
 		int h;
