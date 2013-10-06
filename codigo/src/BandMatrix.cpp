@@ -192,7 +192,6 @@ vector<double> BandMatrix::resolver_sistema(){
 
 	//Algoritmo de triangulacion de matriz:	
 	for(int i=0; i<n; i++){
-		//cout << "Termine fila " << i << endl;
 		elem_diagonal = elem[i][3];			
 		if (abs(elem_diagonal) < e){
 			//Fijarse si hace falta swapear.
@@ -287,9 +286,6 @@ vector<double> BandMatrix::resolver_sistema(){
 	}
 	
 	backward_substitution(res,res_swaps);
-	for(int i=0; i<res.size(); i++){
-		cout << res[i] << endl;
-	}
 	return res;
 }
 
@@ -317,7 +313,6 @@ void BandMatrix::backward_substitution(vector<double>& res, vector<double> res_s
 	}
 
 	res = nuevo;
-	cout << "Termine " << endl;
 }
 
 

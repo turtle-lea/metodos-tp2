@@ -18,3 +18,8 @@ obj/BandMatrix.o : src/BandMatrix.cpp
 
 clean:
 	rm -f -r bin obj
+
+debug:
+	$(CC) -c -Wall src/main.cpp -o obj/main.o 
+	$(CC) -c -Wall src/bridge.cpp -o obj/bridge.o
+	$(CC) -c -Wall src/BandMatrix.cpp -o obj/BandMatrix.o
