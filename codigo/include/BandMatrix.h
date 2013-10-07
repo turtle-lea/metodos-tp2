@@ -13,7 +13,7 @@ class BandMatrix{
 			
 		
 	private:
-		void backward_substitution(vector<double>&,vector<double>);
+		void backward_substitution(vector<double>&,vector<double>,vector<int>);
 		vector<vector<double> > elem;
 		vector<double> b;
 		

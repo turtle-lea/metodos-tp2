@@ -27,10 +27,12 @@ int main(){
 	Bridge tito_puente(l,h,n,cargas);
 	//tito_puente.mostrar();
 	res = tito_puente.resolver_sistema();
+	//cout << endl;
+	//tito_puente.mostrar();
 	//for(int i=0; i<res.size(); i++){
-	//	cout << res[i] << endl;
+		//cout << res[i] << endl;
 	//}
-	cout << endl;
+	//cout << endl;
 	//cout << endl;
 	//tito_puente.mostrar();
 	return 0;

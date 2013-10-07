@@ -21,15 +21,15 @@ BandMatrix::BandMatrix(double cos_theta_1,double sen_theta_1, double cos_theta_2
 	/** C0_h */
 	elem[0][3] = 1; //F0 = h0
 	elem[0][5] = 1; //F2
-	elem[0][6] = sen_theta_2; //sen(theta2)F3
+	elem[0][6] = cos_theta_1; //cos(theta1)F3
 	
 	/** C0_v */
 	elem[1][3] = 1; //F1
-	elem[1][5] = cos_theta_2; //cos(theta2)F3
+	elem[1][5] = sen_theta_1; //sen(theta2)F3
 	
 	/** C1_h -> F2 y F5*/
-	elem[2][3] = 1; //F2
-	elem[2][6] = -1; //-F5
+	elem[2][3] = -1; //F2
+	elem[2][6] = 1; //-F5
 	
 	/** C1_v -> F4*/
 	elem[3][4] = 1; //F4
@@ -129,7 +129,7 @@ BandMatrix::BandMatrix(double cos_theta_1,double sen_theta_1, double cos_theta_2
 	/** Cn/2-2_v */ 
 	elem[n-3][0] = -cos_theta_2; //-cos(theta2)Factual-3
 	elem[n-3][2] = -1; //-Factual-1
-	elem[n-3][5] = -cos_theta_2; //-cos(theta2)Factual+1
+	elem[n-3][4] = -cos_theta_2; //-cos(theta2)Factual+1
 	
 	/** Cn/2-1_h */
 	elem[n-2][2] = -1; // -Factual-1
@@ -147,7 +147,7 @@ BandMatrix::BandMatrix(double cos_theta_1,double sen_theta_1, double cos_theta_2
 	for(int i = 0; i < (n-4)/2; i++){
 		if((i%2) == 0){
 			b.push_back(0.0);
-			b.push_back(cargas[i/2]);
+			b.push_back(-cargas[i/2]);
 		}else{
 			b.push_back(0.0);
 			b.push_back(0.0);
@@ -171,6 +171,7 @@ void BandMatrix::mostrar(){
 vector<double> BandMatrix::resolver_sistema(){
 	vector<double> res_swaps;
 	vector<double> res;
+	vector<int> diagonales;
 	double no_inicializado = -999999.0707;
 	double elem_diagonal;
 	int k = 0; int j; int h; int q;
@@ -190,6 +191,10 @@ vector<double> BandMatrix::resolver_sistema(){
 		res_swaps.push_back(i);		
 	}
 
+	for(int i=0; i < n; i++){
+		diagonales.push_back(3);
+	}
+
 	//Algoritmo de triangulacion de matriz:	
 	for(int i=0; i<n; i++){
 		elem_diagonal = elem[i][3];			
@@ -207,25 +212,8 @@ vector<double> BandMatrix::resolver_sistema(){
 			elem[k+i] = elem[i];
 			elem[i] = aux;
 
-			//shifteo fila i k posiciones a la derecha
-			vector<double> nuevo;
-			for(j=0; j<11; j++){
-				nuevo.push_back(0.0);
-			}
-			for(j=0; j<11-k; j++){
-				nuevo[j+k] = elem[i][j];
-			}
-			elem[i] = nuevo;
-
-			//shifteo fila (k+i) k posiciones a la izquierda
-			for(j=0; j<11; j++){
-				nuevo[j] = 0.0;
-			}
-			for(j=0; j<11-k; j++){
-				nuevo[j] = elem[i+k][j+k];
-			}
-			elem[i+k] = nuevo;
-
+			diagonales[i] -= k;	
+			diagonales[k+i] += k;	
 			//imprimo fila i
 			/*
 			cout << "Fila i actualizada: " << endl;
@@ -258,38 +246,38 @@ vector<double> BandMatrix::resolver_sistema(){
 			 if(j!=k){
 				//Calculo el multiplicador
 				if(abs(elem[i+j][3-j])>e){
-					
-					/*
-					for(int c=0; c<8; c++){
-						cout << elem[i+j][c] << " ";
-					}
-					cout << endl;	
-					*/
-					/*
-					cout << endl;
-					cout << "con elems: " << elem[i+j][3-j] <<" y " << elem[i][3-k] << endl;
-					cout << "Fila: " << i+j << endl;
-					*/
-					h = 3;
+					h = 3-k;
 					q = 3-j;
 					m = elem[i+j][q]/elem[i][h];
 					while(h<11 && q<11){
 						elem[i+j][q] = elem[i+j][q] - m*elem[i][h];
 						h++; q++;
 					}
+					b[i+j] = b[i+j] - m*b[i];
 				}
 			}
 			j++;
 		}	
 		k=0;
 		
+		cout << "Iteracion: " << i << " : ";
+		for(int p=0; p<diagonales.size(); p++){
+			if(p==i) cout << "[";
+			cout << diagonales[p] << " ";
+			if(p==i) cout << "]";
+		}
+		cout << endl;
+		cout << endl;
 	}
-	
-	backward_substitution(res,res_swaps);
+
+	//for(int i=0; i<diagonales.size(); i++){
+	//	cout << diagonales[i] << endl;
+	//}
+	backward_substitution(res,res_swaps, diagonales);
 	return res;
 }
 
-void BandMatrix::backward_substitution(vector<double>& res, vector<double> res_swaps){
+void BandMatrix::backward_substitution(vector<double>& res, vector<double> res_swaps,vector<int> diagonales){
 	int n = b.size();
 
 	vector<double> nuevo;
@@ -302,10 +290,10 @@ void BandMatrix::backward_substitution(vector<double>& res, vector<double> res_s
 		acum = 0.0;
 		for(int j=1; j<= 7; j++){
 			if(i+j<n){
-				acum += elem[i][3+j]*res[i+j];
+				acum += elem[i][diagonales[i]+j]*res[i+j];
 			}	
 		}
-		res[i] = (b[i]-acum)/elem[i][3];
+		res[i] = (b[i]-acum)/elem[i][diagonales[i]];
 	}
 	
 	for(int i=0; i<res_swaps.size(); i++){
