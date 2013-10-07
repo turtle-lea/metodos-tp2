@@ -13,7 +13,8 @@ void Bridge::mostrar(){
 	}
 	cout << endl;
 	*/
-	banda->mostrar();
+	//banda->mostrar();
+	banda->mostrar2(cout);
 	
 }
 
