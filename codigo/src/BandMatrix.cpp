@@ -168,6 +168,16 @@ void BandMatrix::mostrar(){
 	}
 }
 
+void BandMatrix::mostrar2(ostream& os)
+{
+	m_imprimir(elem,os);
+}
+
+void BandMatrix::mostrar2(ofstream& os)
+{
+	m_imprimir(elem, os);
+}
+
 vector<double> BandMatrix::resolver_sistema(){
 	vector<double> res_swaps;
 	vector<double> res;
