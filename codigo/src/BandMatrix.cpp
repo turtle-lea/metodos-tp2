@@ -13,10 +13,6 @@ BandMatrix::BandMatrix(double cos_theta_1,double sen_theta_1, double cos_theta_2
 			elem[i].push_back(0.0);
 		}
 	}
-	/// elem \in R^(n*8)
-	
-	//filas 0..n-1  !! columnas 0..7
-	//columna 3 = diagonal
 	
 	/** C0_h */
 	elem[0][3] = 1; //F0 = h0
@@ -67,26 +63,26 @@ BandMatrix::BandMatrix(double cos_theta_1,double sen_theta_1, double cos_theta_2
 		}
 	}
 	
-	/** C n/4 -1_h -> F9 F10 F14 F13*/
+	/** C n/4 -1_h  **/
 	int medio = n/2 - 2;
 	elem[medio][2] = -1; //-Fmedio-1
 	elem[medio][3] = -cos_theta_1; //-cos(theta1)Fmedio
 	elem[medio][6] = 1; //Fmedio+3
 	elem[medio][7] = cos_theta_1; //cos(theta1)Fmedio+4
 		
-	/** C n/4 -1_v -> F10 F12 F14*/
+	/** C n/4 -1_v */
 	medio++;
 	elem[medio][2] = sen_theta_1; //sen(theta1)Fmedio-1	
 	elem[medio][4] = 1; //Fmedio+1
 	elem[medio][6] = sen_theta_1; //sen(theta1)Fmedio+3
 	
-	/** C n/4_h -> F11 F15*/
+	/** C n/4_h */
 	medio++; 
 	elem[medio][2] = -1; // -Fmedio-1
 	elem[medio][6] = 1; // Fmedio+3
 
 	
-	/** C n/4_v -> F12*/
+	/** C n/4_v */
 	medio++;
 	elem[medio][2] = -1; //-Fmedio-1
 	
