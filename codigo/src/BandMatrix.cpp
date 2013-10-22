@@ -178,6 +178,16 @@ void BandMatrix::mostrar2(ofstream& os)
 	m_imprimir(elem, os);
 }
 
+bool BandMatrix::hayQueIterar(int i,const vector<int>& diagonales, double e){
+	bool hayQueIterar = false;
+	for(int j=1; j< 4 && i+j<diagonales.size(); j++){
+		if( abs(elem[i+j][diagonales[i+j]-j]) > e){
+			hayQueIterar = true;
+			break;
+		}
+	}
+	return hayQueIterar;
+}
 vector<double> BandMatrix::resolver_sistema(){
 	vector<double> res_swaps;
 	vector<double> res;
@@ -207,82 +217,73 @@ vector<double> BandMatrix::resolver_sistema(){
 
 	//Algoritmo de triangulacion de matriz:	
 	for(int i=0; i<n; i++){
-		elem_diagonal = elem[i][3];			
-		if (abs(elem_diagonal) < e){
-			//Fijarse si hace falta swapear.
-			k=1;	
-			//Encuentro la fila para swapear
-			while(k<=3 && k+i < n){
-				if(abs(elem[i+k][3-k]) > e) break;
-				k++;
-			}
-			
-			//swapeo fila i con fila k+i
-			aux = elem[k+i];	
-			elem[k+i] = elem[i];
-			elem[i] = aux;
-
-			diagonales[i] -= k;	
-			diagonales[k+i] += k;	
-			//imprimo fila i
-			/*
-			cout << "Fila i actualizada: " << endl;
-			for(int j=0; j<8; j++){
-				cout << elem[i][j] << " ";
-			}
-			cout << endl;
-
-			//imprimo fila k+i actualizada
-			cout << "fila k+i actualizada: " << endl;
-			for(int j=0; j<8; j++){
-				cout << elem[k+i][j] << " ";
-			}
-			cout << endl;
-			*/
-
-			//swapeo elem i de b con elem k+i
-			aux_2 = b[k+i];
-			b[k+i] = b[i];
-			b[i] = aux_2;
-			
-			//Guardo info equivalente a la matriz de permutacion
-			res_swaps[i] = k+i;
-			res_swaps[k+i] = i;
-		}
+		elem_diagonal = elem[i][diagonales[i]];			
 		
-		j=1;
-		while(j<=3 && i+j<n){
-			//si estoy en la fila que swapee
-			 if(j!=k){
-				//Calculo el multiplicador
-				if(abs(elem[i+j][3-j])>e){
-					h = 3-k;
-					q = 3-j;
-					m = elem[i+j][q]/elem[i][h];
-					while(h<11 && q<11){
-						elem[i+j][q] = elem[i+j][q] - m*elem[i][h];
-						h++; q++;
-					}
-					b[i+j] = b[i+j] - m*b[i];
+		if(hayQueIterar(i,diagonales,e)){
+			
+			if (abs(elem_diagonal) < e){
+				//Fijarse si hace falta swapear.
+				k=1;	
+				//Encuentro la fila para swapear
+				while(k<=3 && (k+i < n)){
+					//~ if(abs(elem[i+k][3-k]) > e) break;
+					if(abs(elem[i+k][diagonales[i+k]-k]) > e) break;
+					k++;
 				}
+				
+				//swapeo fila i con fila k+i
+				aux = elem[k+i];	
+				elem[k+i] = elem[i];
+				elem[i] = aux;
+
+				diagonales[i] -= k;	
+				diagonales[k+i] += k;	
+				//imprimo fila i
+				
+				//swapeo elem i de b con elem k+i
+				aux_2 = b[k+i];
+				b[k+i] = b[i];
+				b[i] = aux_2;
+				
+				//Guardo info equivalente a la matriz de permutacion
+				res_swaps[i] = k+i;
+				res_swaps[k+i] = i;
 			}
-			j++;
-		}	
-		k=0;
-		
-		cout << "Iteracion: " << i << " : ";
+			
+			j=1;
+			while(j<=3 && i+j<n){
+				//si estoy en la fila que swapee
+				 if(j!=k){
+					//Calculo el multiplicador
+					if(abs(elem[i+j][3-j])>e){
+						h = 3-k;
+						q = 3-j;
+						m = elem[i+j][q]/elem[i][h];
+						while(h<11 && q<11){
+							elem[i+j][q] = elem[i+j][q] - m*elem[i][h];
+							h++; q++;
+						}
+						b[i+j] = b[i+j] - m*b[i];
+					}
+				}
+				j++;
+			}	
+			k=0;
+			
+		}
+		cout << "Iteracion " << i << " : ";
 		for(int p=0; p<diagonales.size(); p++){
 			if(p==i) cout << "[";
 			cout << diagonales[p] << " ";
-			if(p==i) cout << "]";
+			if(p==i) cout << "] ";
 		}
 		cout << endl;
 		cout << endl;
 	}
 
-	//for(int i=0; i<diagonales.size(); i++){
-	//	cout << diagonales[i] << endl;
-	//}
+	for(int i=0; i<diagonales.size(); i++){
+		cout << diagonales[i] << endl;
+	}
 	backward_substitution(res,res_swaps, diagonales);
 	return res;
 }
