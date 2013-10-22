@@ -40,8 +40,8 @@ BandMatrix::BandMatrix(double cos_theta_1,double sen_theta_1, double cos_theta_2
 	elem[4][6] = 1; //+F7
 	
 	/** C2_v -> F3 F4 F6*/
-	elem[5][1] = -1; //-F4
-	elem[5][2] = -cos_theta_2; //-cos(theta2)F3
+	elem[5][1] = -cos_theta_2; //-F4
+	elem[5][2] = -1; //-cos(theta2)F3
 	elem[5][4] = -cos_theta_2; //-cos(theta2)F6
 
 	int estoy_abajo;
@@ -91,7 +91,7 @@ BandMatrix::BandMatrix(double cos_theta_1,double sen_theta_1, double cos_theta_2
 	elem[medio][2] = -1; //-Fmedio-1
 	
 	medio++;
-	
+
 	for(int i = medio ; i < n-6 ; i = i+2){
 		estoy_abajo = i % 4;
 		int j = i+1;
@@ -105,7 +105,7 @@ BandMatrix::BandMatrix(double cos_theta_1,double sen_theta_1, double cos_theta_2
 			elem[j][6] = sen_theta_1; //sen(theta1)Fj+3
 		}else{
 			//horizontales
-			elem[i][1] = sen_theta_2; //-sen(theta2)Fi-2
+			elem[i][1] = -sen_theta_2; //-sen(theta2)Fi-2
 			elem[i][2] = -1; //-Fi-1 
 			elem[i][6] = 1; //+Fi+3
 			//verticales
@@ -271,19 +271,16 @@ vector<double> BandMatrix::resolver_sistema(){
 			k=0;
 			
 		}
-		cout << "Iteracion " << i << " : ";
-		for(int p=0; p<diagonales.size(); p++){
-			if(p==i) cout << "[";
-			cout << diagonales[p] << " ";
-			if(p==i) cout << "] ";
-		}
-		cout << endl;
-		cout << endl;
+		//cout << "Iteracion " << i << " : ";
+		//for(int p=0; p<diagonales.size(); p++){
+		//	if(p==i) cout << "[";
+		//	cout << diagonales[p] << " ";
+		//	if(p==i) cout << "] ";
+		//}
+		//cout << endl;
+		//cout << endl;
 	}
 
-	for(int i=0; i<diagonales.size(); i++){
-		cout << diagonales[i] << endl;
-	}
 	backward_substitution(res,res_swaps, diagonales);
 	return res;
 }
@@ -307,11 +304,11 @@ void BandMatrix::backward_substitution(vector<double>& res, vector<double> res_s
 		res[i] = (b[i]-acum)/elem[i][diagonales[i]];
 	}
 	
-	for(int i=0; i<res_swaps.size(); i++){
-		nuevo[i] = res[res_swaps[i]];
-	}
+	//for(int i=0; i<res_swaps.size(); i++){
+	//	nuevo[i] = res[res_swaps[i]];
+	//}
 
-	res = nuevo;
+	//res = nuevo;
 }
 
 
