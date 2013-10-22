@@ -255,9 +255,9 @@ vector<double> BandMatrix::resolver_sistema(){
 				//si estoy en la fila que swapee
 				 if(j!=k){
 					//Calculo el multiplicador
-					if(abs(elem[i+j][3-j])>e){
-						h = 3-k;
-						q = 3-j;
+					if(abs(elem[i+j][diagonales[i+j]-j]) >e){
+						h = diagonales[i];
+						q = diagonales[i+j]-j;
 						m = elem[i+j][q]/elem[i][h];
 						while(h<11 && q<11){
 							elem[i+j][q] = elem[i+j][q] - m*elem[i][h];
