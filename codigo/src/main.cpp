@@ -1,6 +1,6 @@
-#include<iostream>
-#include<fstream>
-#include<vector>
+#include <iostream>
+#include <fstream>
+#include <vector>
 #include "../include/bridge.h"
 #include "../include/BandMatrix.h"
 
