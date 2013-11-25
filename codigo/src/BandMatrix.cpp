@@ -185,31 +185,28 @@ bool BandMatrix::hayQueIterar(int i,const vector<int>& diagonales, double e){
 	return hayQueIterar;
 }
 vector<double> BandMatrix::resolver_sistema(){
-	vector<double> res_swaps;
 	vector<double> res;
 	vector<int> diagonales;
-	double no_inicializado = -999999.0707;
 	double elem_diagonal;
-	int k = 0; int j; int h; int q;
+	double no_inicializado = -999999.999999;
+	double e = 0.0000000001;
+	int k = 0; int j; int h; int q; int n = b.size();
 	vector<double> aux;
 	double aux_2;
 	double m;
 
-	//Defino epsilon como 10**(-10)
-	double e = 0.0000000001;
-	int n = b.size();
+	/** Inicializacion de estructuras **/
 
 	//Inicializo vector res	y res_swaps
 	for(int i=0; i< n; i++){
 		res.push_back(no_inicializado);
 	}
-	for(int i=0; i < n; i++){
-		res_swaps.push_back(i);		
-	}
 
 	for(int i=0; i < n; i++){
 		diagonales.push_back(3);
 	}
+
+	/** Fin de inicializacion de estructuras **/
 
 	//Algoritmo de triangulacion de matriz:	
 	for(int i=0; i<n; i++){
@@ -241,9 +238,6 @@ vector<double> BandMatrix::resolver_sistema(){
 				b[k+i] = b[i];
 				b[i] = aux_2;
 				
-				//Guardo info equivalente a la matriz de permutacion
-				res_swaps[i] = k+i;
-				res_swaps[k+i] = i;
 			}
 			
 			j=1;
@@ -267,21 +261,16 @@ vector<double> BandMatrix::resolver_sistema(){
 			k=0;
 			
 		}
-		//cout << "Iteracion " << i << " : ";
-		//for(int p=0; p<diagonales.size(); p++){
-		//	if(p==i) cout << "[";
-		//	cout << diagonales[p] << " ";
-		//	if(p==i) cout << "] ";
-		//}
-		//cout << endl;
-		//cout << endl;
 	}
 
-	backward_substitution(res,res_swaps, diagonales);
+	backward_substitution(res, diagonales);
 	return res;
 }
 
-void BandMatrix::backward_substitution(vector<double>& res, vector<double> res_swaps,vector<int> diagonales){
+void BandMatrix::backward_substitution(vector<double>& res, vector<int> diagonales){
+	for(int i=0; i<res.size(); i++){
+		cout << res[i] << endl;
+	}
 	int n = b.size();
 
 	vector<double> nuevo;
@@ -300,11 +289,6 @@ void BandMatrix::backward_substitution(vector<double>& res, vector<double> res_s
 		res[i] = (b[i]-acum)/elem[i][diagonales[i]];
 	}
 	
-	//for(int i=0; i<res_swaps.size(); i++){
-	//	nuevo[i] = res[res_swaps[i]];
-	//}
-
-	//res = nuevo;
 }
 
 
