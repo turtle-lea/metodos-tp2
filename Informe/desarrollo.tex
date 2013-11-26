@@ -128,3 +128,69 @@ Ecuación $(2(2n-1)+1 = 4n-1)$ : $c_{2n-1} v = sen(\theta_{1})*f_{(4n-1)-1} + 1*
 	\end{center}
 \end{figure}
 \FloatBarrier
+
+Al mirar el esquema de la matriz podemos llegar a clasificar rápidamente a la matriz como banda 3,4. Tratemos de analizar un poco este hecho:
+
+Sea $b$ nuestra matriz. 
+La mitad izquierda de la banda, también conocida como $p$, está relacionada con la mayor distancia entre una fila $i$, y una fila $j$, con $j \geq i$ para 
+las cuales el $link_{i}$ interviene en la ecuación de la fila $j$. Por lo tanto, si llamamos $p$ a esta distancia observamos que:
+
+- $b_{j,j-p} \neq 0$. Justamente, $j-p = i$, y habíamos dicho que $link_{i}$ interviene en dicha ecuación.
+
+- Sea $h$ una fila tal que $h \neq k$. Entonces, el índice de la columna más a la izquierda que tiene un coeficiente $\neq 0$ es mayor o igual a (h-p).
+
+\begin{figure}[!h]
+	\begin{center}
+		  \includegraphics[scale=1.5]{Imagenes/im_4.pdf}
+		  \caption{Explicación de la mitad izquierda de la banda: \emph{p}}
+		  \label{fig:contra1}
+	\end{center}
+\end{figure}
+\FloatBarrier
+
+En el caso de nuestro puente, las juntas que presentan esta máxima distancia \emph{p} son aquellas como las que muestra la 
+figura, pintadas en azul: Par alineado verticalmente perteneciente a la segunda mitad del puente.  
+
+\begin{figure}[!h]
+	\begin{center}
+		  \includegraphics[scale=0.5]{Imagenes/im_5.pdf}
+		  \caption{Explicación de la mitad izquierda de la banda: \emph{p}}
+		  \label{fig:contra1}
+	\end{center}
+\end{figure}
+\FloatBarrier
+
+Tal como vemos en la figura 5, el coeficiente que acompaña a $f_{i}$ es distinto de cero en la ecuación $i+3$. Esto determina
+una banda izquierda $p \leq 3$. Sin embargo, para ningún par de ecuaciones se cumple $p > 3$. Por lo tanto, podemos concluir que $p=3$.
+
+~
+
+La mitad derecha de la banda, conocida como $q$, está relacionada con el link de mayor numeración que interviene en la ecuación
+de una junta. Profundizando un poco, al analizar la ecuación $i$, la 
+diferencia entre la mayor columna $j$ y la columna $i$ (con $j \geq i$ tal que $b_{i,j} \neq 0$)
+determina la mitad derecha de la banda para dicha ecuación. La mayor de estas diferencias para todas las filas determina $q$.
+
+\begin{figure}[!h]
+	\begin{center}
+		  \includegraphics[scale=1.5]{Imagenes/im_6.pdf}
+		  \caption{Explicación de la mitad derecha de la banda: \emph{q}}
+		  \label{fig:contra1}
+	\end{center}
+\end{figure}
+\FloatBarrier
+
+Tal como muestra el esquema, esta máxima diferencia se produce en las ecuaciones horizontales pertenecientes a las juntas
+inferiores de la segunda mitad del puente. 
+
+\begin{figure}[!h]
+	\begin{center}
+		  \includegraphics[scale=0.5]{Imagenes/im_7.pdf}
+		  \caption{Explicación de la mitad derecha de la banda: \emph{q}}
+		  \label{fig:contra1}
+	\end{center}
+\end{figure}
+\FloatBarrier
+
+Al analizar la fila $i$, perteneciente a la ecuación horizontal de la junta $\frac{i}{2}$, el link de mayor numeración que
+interviene en la ecuación es $i+4 \Rightarrow \ q \geq 4$. Sin embargo, para ninguna ecuación esta diferencia es mayor que 
+4, por lo que podemos concluir que $q=4$.

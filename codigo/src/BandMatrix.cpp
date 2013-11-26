@@ -174,39 +174,15 @@ void BandMatrix::mostrar2(ofstream& os)
 	m_imprimir(elem, os);
 }
 
-bool BandMatrix::hayQueIterar(int i,const vector<int>& diagonales, double e){
-	bool hayQueIterar = false;
-	for(int j=1; j< 4 && i+j<diagonales.size(); j++){
-		if( abs(elem[i+j][diagonales[i+j]-j]) > e){
-			hayQueIterar = true;
-			break;
-		}
-	}
-	return hayQueIterar;
-}
 vector<double> BandMatrix::resolver_sistema(){
 	vector<double> res;
 	vector<int> diagonales;
 	double elem_diagonal;
-	double no_inicializado = -999999.999999;
 	double e = 0.0000000001;
 	int k = 0; int j; int h; int q; int n = b.size();
-	vector<double> aux;
-	double aux_2;
 	double m;
 
-	/** Inicializacion de estructuras **/
-
-	//Inicializo vector res	y res_swaps
-	for(int i=0; i< n; i++){
-		res.push_back(no_inicializado);
-	}
-
-	for(int i=0; i < n; i++){
-		diagonales.push_back(3);
-	}
-
-	/** Fin de inicializacion de estructuras **/
+	inicializar_estructuras(res,diagonales,n);
 
 	//Algoritmo de triangulacion de matriz:	
 	for(int i=0; i<n; i++){
@@ -225,6 +201,8 @@ vector<double> BandMatrix::resolver_sistema(){
 				}
 				
 				//swapeo fila i con fila k+i
+				vector<double> aux;
+				double aux_2;
 				aux = elem[k+i];	
 				elem[k+i] = elem[i];
 				elem[i] = aux;
@@ -245,7 +223,7 @@ vector<double> BandMatrix::resolver_sistema(){
 				//si estoy en la fila que swapee
 				 if(j!=k){
 					//Calculo el multiplicador
-					if(abs(elem[i+j][diagonales[i+j]-j]) >e){
+					if(abs(elem[i+j][diagonales[i+j]-j]) >e ){
 						h = diagonales[i];
 						q = diagonales[i+j]-j;
 						m = elem[i+j][q]/elem[i][h];
@@ -268,9 +246,6 @@ vector<double> BandMatrix::resolver_sistema(){
 }
 
 void BandMatrix::backward_substitution(vector<double>& res, vector<int> diagonales){
-	for(int i=0; i<res.size(); i++){
-		cout << res[i] << endl;
-	}
 	int n = b.size();
 
 	vector<double> nuevo;
@@ -292,3 +267,24 @@ void BandMatrix::backward_substitution(vector<double>& res, vector<int> diagonal
 }
 
 
+bool BandMatrix::hayQueIterar(int i,const vector<int>& diagonales, double e){
+	bool hayQueIterar = false;
+	for(int j=1; j< 4 && i+j<diagonales.size(); j++){
+		if( abs(elem[i+j][diagonales[i+j]-j]) > e){
+			hayQueIterar = true;
+			break;
+		}
+	}
+	return hayQueIterar;
+}
+
+
+void BandMatrix::inicializar_estructuras(vector<double>& res, vector<int>& diagonales, int n){
+	double no_inicializado = -999999.999999;
+	for(int i=0; i< n; i++){
+		res.push_back(no_inicializado);
+	}
+	for(int i=0; i < n; i++){
+		diagonales.push_back(3);
+	}
+}

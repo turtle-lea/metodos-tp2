@@ -19,6 +19,7 @@ class BandMatrix{
 	private:
 		bool hayQueIterar(int i,const vector<int>& diagonales, double e);
 		void backward_substitution(vector<double>&,vector<int>);
+		void inicializar_estructuras(vector<double>&, vector<int>&,int);
 		vector<vector<double> > elem;
 		vector<double> b;
 		
