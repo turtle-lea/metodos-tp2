@@ -274,8 +274,27 @@ $i+j+q$. Sin embargo esta situación pudo haber cambiado luego de realizar el pa
 elemento más a la derecha podría estar a lo sumo en la columna: $i+p+q-1$. Notemos que $i+j+q \leq i+p+q-1 , \ \forall 
 \ 0 \leq j \leq (p-1)$.
 
+\begin{figure}[!h]
+	\begin{center}
+		  \includegraphics[scale=0.5]{Imagenes/im_8.pdf}
+		  \caption{Estado de la matriz luego de realizar el (i-1)-ésimo paso. Se muestran únicamente
+		  las filas y columnas que intervienen en el i-ésimo paso}
+		  \label{fig:contra1}
+	\end{center}
+\end{figure}
+\FloatBarrier
+
 Para la fila $(i+p)$ la columna de mayor índice es a lo sumo $(i+p+q)$. Es suficiente probar que la matriz se mantiene como 
 banda (p,p+q) luego de intercambiar las filas $i$ e $i+p$ ya que constituye el peor caso que podría ensanchar las bandas.
+
+\begin{figure}[!h]
+	\begin{center}
+		  \includegraphics[scale=0.5]{Imagenes/im_9.pdf}
+		  \caption{$b^{(i-1)}$ al swapear las filas i e (i+p), ya que constituye el peor caso que podría ensanchar
+		  las bandas.}
+		  \label{fig:contra1}
+	\end{center}
+\end{figure}
 
 ~
 
@@ -300,6 +319,14 @@ $Banda \ derecha \leq (i+p+q-1) - (i+p) \leq p+q$ (Columna del elemento más a l
 La fila $(i+p)$ mantiene la propiedad de ser banda p,(p+q).
 
 ~
+
+\begin{figure}[!h]
+	\begin{center}
+		  \includegraphics[scale=0.5]{Imagenes/im_10.pdf}
+		  \caption{$b^{(i)}$ al realizar el paso habiendo intercambiado las filas i e (i+p)}
+		  \label{fig:contra1}
+	\end{center}
+\end{figure}
 
 Sea $k$ una fila tal que $i \leq k \leq (i+p)$. Luego de realizar el i-ésimo paso de Gauss y generar los ceros en la 
 i-ésima columna tenemos que:
