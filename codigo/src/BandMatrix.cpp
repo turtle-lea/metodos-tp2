@@ -182,41 +182,47 @@ vector<double> BandMatrix::resolver_sistema(){
 
 	inicializar_estructuras(res,diagonales,n);
 
+	for(int i=0; i<b.size(); i++) cout << b[i] << " ";
+	cout << endl;
+
+	mostrar();
 	//Algoritmo de triangulacion de matriz:	
 	for(int i=0; i<n; i++){
 		if(hayQueIterar(i,diagonales,e)){
 			double elem_diagonal = elem[i][diagonales[i]];			
-			double max = abs(elem_diagonal);
-			int k_max = 0;
-
-			//Encuentro la fila para swapear
-			for(int k=0; k<=3 && ((k+i)<n); k++){
-				if((diagonales[i+k]-k)>=0){
-					if(abs(elem[i+k][diagonales[i+k]-k]) > abs(max)){
-						k_max = k;
-						max = abs(elem[i+k][diagonales[i+k]-k]);
-					} 
+			if(abs(elem_diagonal)<e){
+				double max = abs(elem_diagonal);
+				int k_max = 0;
+	
+				//Encuentro la fila para swapear
+				for(int k=0; k<=3 && ((k+i)<n); k++){
+					if((diagonales[i+k]-k)>=0){
+						if(abs(elem[i+k][diagonales[i+k]-k]) > abs(max)){
+							k_max = k;
+							max = abs(elem[i+k][diagonales[i+k]-k]);
+						} 
+					}
 				}
-			}
+						
+				//swapeo fila i con fila k_max +i 
+				vector<double> aux;
+				aux = elem[k_max+i];	
+				elem[k_max+i] = elem[i];
+				elem[i] = aux;
+	
+				int aux_2;
+				aux_2 = diagonales[i];
+				diagonales[i] = diagonales[k_max+i] - k_max;	
+				diagonales[k_max+i] = aux_2+k_max;	
+				if((aux_2+k_max)>6) cout << "Diagonal peligrosa: " << i << endl;
 				
-			//swapeo fila i con fila k_max +i 
-			vector<double> aux;
-			aux = elem[k_max+i];	
-			elem[k_max+i] = elem[i];
-			elem[i] = aux;
-
-			int aux_2;
-			aux_2 = diagonales[i];
-			diagonales[i] = diagonales[k_max+i] - k_max;	
-			diagonales[k_max+i] = aux_2+k_max;	
-			if((aux_2+k_max)>6) cout << "Diagonal peligrosa: " << i << endl;
+				//swapeo el vector b
+				double aux_3;
+				aux_3 = b[k_max+i];
+				b[k_max+i] = b[i];
+				b[i] = aux_3;
 			
-			//swapeo el vector b
-			double aux_3;
-			aux_3 = b[k_max+i];
-			b[k_max+i] = b[i];
-			b[i] = aux_3;
-			
+			}
 			for(int j=1;(j<=3) && (i+j)<n;j++){
 				//Calculo el multiplicador
 				if(abs(elem[i+j][diagonales[i+j]-j]) > e){
@@ -236,14 +242,14 @@ vector<double> BandMatrix::resolver_sistema(){
 		}
 	}
 
-	for(int i=0; i<diagonales.size();i++){
-		cout << diagonales[i] << " ";
-	}
-	cout << endl;
-	for(int i=0; i<11; i++){
-		cout << elem[n-1][i] << " ";
-	}
-	cout << endl;
+	// for(int i=0; i<diagonales.size();i++){
+		// cout << diagonales[i] << " ";
+	// }
+	// cout << endl;
+	// for(int i=0; i<11; i++){
+		// cout << elem[n-1][i] << " ";
+	// }
+	// cout << endl;
 	// mostrar();
 	backward_substitution(res, diagonales);
 	return res;
