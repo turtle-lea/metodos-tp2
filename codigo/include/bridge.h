@@ -37,8 +37,8 @@ class Bridge{
 		vector<double> resolver_sistema(){return banda->resolver_sistema();}
 	
 	private:
-		int h;
-		int l;
+		double h;
+		double l;
 		int n;
 		double cos_theta_1;
 		double sen_theta_1;

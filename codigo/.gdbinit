@@ -1,3 +1,2 @@
-b BandMatrix::BandMatrix
-b BandMatrix.cpp:143
-r < Ex1.in
+b BandMatrix.cpp:187
+r < instancias/ex1.in

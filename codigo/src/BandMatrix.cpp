@@ -177,73 +177,78 @@ void BandMatrix::mostrar2(ofstream& os)
 vector<double> BandMatrix::resolver_sistema(){
 	vector<double> res;
 	vector<int> diagonales;
-	double elem_diagonal;
 	double e = 0.0000000001;
-	int k = 0; int j; int h; int q; int n = b.size();
-	double m;
+	int n = b.size();
 
 	inicializar_estructuras(res,diagonales,n);
 
 	//Algoritmo de triangulacion de matriz:	
 	for(int i=0; i<n; i++){
-		elem_diagonal = elem[i][diagonales[i]];			
-		
 		if(hayQueIterar(i,diagonales,e)){
-			
-			if (abs(elem_diagonal) < e){
-				//Fijarse si hace falta swapear.
-				k=1;	
-				//Encuentro la fila para swapear
-				while(k<=3 && (k+i < n)){
-					//~ if(abs(elem[i+k][3-k]) > e) break;
-					if(abs(elem[i+k][diagonales[i+k]-k]) > e) break;
-					k++;
-				}
-				
-				//swapeo fila i con fila k+i
-				vector<double> aux;
-				double aux_2;
-				aux = elem[k+i];	
-				elem[k+i] = elem[i];
-				elem[i] = aux;
+			double elem_diagonal = elem[i][diagonales[i]];			
+			double max = abs(elem_diagonal);
+			int k_max = 0;
 
-				diagonales[i] -= k;	
-				diagonales[k+i] += k;	
-				//imprimo fila i
-				
-				//swapeo elem i de b con elem k+i
-				aux_2 = b[k+i];
-				b[k+i] = b[i];
-				b[i] = aux_2;
-				
-			}
-			
-			j=1;
-			while(j<=3 && i+j<n){
-				//si estoy en la fila que swapee
-				 if(j!=k){
-					//Calculo el multiplicador
-					if(abs(elem[i+j][diagonales[i+j]-j]) >e ){
-						h = diagonales[i];
-						q = diagonales[i+j]-j;
-						m = elem[i+j][q]/elem[i][h];
-						while(h<11 && q<11){
-							elem[i+j][q] = elem[i+j][q] - m*elem[i][h];
-							h++; q++;
-						}
-						b[i+j] = b[i+j] - m*b[i];
-					}
+			//Encuentro la fila para swapear
+			for(int k=0; k<=3 && ((k+i)<n); k++){
+				if((diagonales[i+k]-k)>=0){
+					if(abs(elem[i+k][diagonales[i+k]-k]) > abs(max)){
+						k_max = k;
+						max = abs(elem[i+k][diagonales[i+k]-k]);
+					} 
 				}
-				j++;
-			}	
-			k=0;
+			}
+				
+			//swapeo fila i con fila k_max +i 
+			vector<double> aux;
+			aux = elem[k_max+i];	
+			elem[k_max+i] = elem[i];
+			elem[i] = aux;
+
+			int aux_2;
+			aux_2 = diagonales[i];
+			diagonales[i] = diagonales[k_max+i] - k_max;	
+			diagonales[k_max+i] = aux_2+k_max;	
+			if((aux_2+k_max)>6) cout << "Diagonal peligrosa: " << i << endl;
 			
+			//swapeo el vector b
+			double aux_3;
+			aux_3 = b[k_max+i];
+			b[k_max+i] = b[i];
+			b[i] = aux_3;
+			
+			for(int j=1;(j<=3) && (i+j)<n;j++){
+				//Calculo el multiplicador
+				if(abs(elem[i+j][diagonales[i+j]-j]) > e){
+					int h = diagonales[i];
+					int q = diagonales[i+j]-j;
+					double m = elem[i+j][q]/elem[i][h];
+					//Realizo el iésimo paso
+					while(h<11 && q<11){
+						elem[i+j][q] = elem[i+j][q] - m*elem[i][h];
+						h++; q++;
+					}
+				
+					//Modifico el vector b
+					b[i+j] = b[i+j] - m*b[i];
+				}
+			}
 		}
 	}
 
+	for(int i=0; i<diagonales.size();i++){
+		cout << diagonales[i] << " ";
+	}
+	cout << endl;
+	for(int i=0; i<11; i++){
+		cout << elem[n-1][i] << " ";
+	}
+	cout << endl;
+	// mostrar();
 	backward_substitution(res, diagonales);
 	return res;
 }
+
 
 void BandMatrix::backward_substitution(vector<double>& res, vector<int> diagonales){
 	int n = b.size();
@@ -258,7 +263,9 @@ void BandMatrix::backward_substitution(vector<double>& res, vector<int> diagonal
 		acum = 0.0;
 		for(int j=1; j<= 7; j++){
 			if(i+j<n){
-				acum += elem[i][diagonales[i]+j]*res[i+j];
+				if((diagonales[i]+j) < 10){
+					acum += elem[i][diagonales[i]+j]*res[i+j];
+				}
 			}	
 		}
 		res[i] = (b[i]-acum)/elem[i][diagonales[i]];
@@ -270,9 +277,11 @@ void BandMatrix::backward_substitution(vector<double>& res, vector<int> diagonal
 bool BandMatrix::hayQueIterar(int i,const vector<int>& diagonales, double e){
 	bool hayQueIterar = false;
 	for(int j=1; j< 4 && i+j<diagonales.size(); j++){
-		if( abs(elem[i+j][diagonales[i+j]-j]) > e){
-			hayQueIterar = true;
-			break;
+		if( diagonales[i+j]-j >= 0){
+			if( abs(elem[i+j][diagonales[i+j]-j]) > e){
+				hayQueIterar = true;
+				break;
+			}
 		}
 	}
 	return hayQueIterar;
