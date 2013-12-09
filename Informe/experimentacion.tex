@@ -1,0 +1,40 @@
+\subsection{Experimentación}
+
+Luego de implementar el algoritmo de eliminación Gaussiana con pivoteo parcial adaptado a nuestra representación de la matriz banda,
+realizamos experimentos para ver qué sucedía con las fuerzas ejercidas sobre cada link en base a lo pedido por el enunciado:
+
+a) Variando el \emph{span}, con la altura y el peso de las cargas fijo, para distintos valores de \emph{n}.
+
+b) Variando el peso de las cargas, con el \emph{span} y la altura fijos, para distintos valores de \emph{n}.
+
+Realizamos ambas etapas de la experimentación variando \emph{n} (que representa la cantidad de secciones de nuestro puente).
+Las pruebas fueron realizadas para valores de $n= 4,6,8,10,12$ (valores relativamente peque\~nos, con granularidad de 2), pero 
+también con $n=16,32,64,128$ (granularidad mayor).
+
+La parte b) de la experimentación se divide a su vez en otras 3 partes, ya que hay varias maneras de variar el peso de las cargas: 
+
+1) Modificando solamente el peso de una de las ellas, dejando a las restantes con igual peso.
+
+2) Variando uniformemente el peso de todas las cargas.
+
+3) Variando únicamente el valor de la carga de la junta del medio de la estructura.
+
+Decidimos separar la sección b) en estas 3 partes para poder corroborar algunas de nuestras hipótesis o simplemente observar 
+los resultados:
+
+1) Hipótesis: Al aumentar el peso de una carga aplicada sobre una $junta_{i}$, existe algún/algunos links en la estructura que se ven
+particularmente afectados.
+
+2) Observación: Determinar cómo aumentan las fuerzas ejercidas sobre los links a medida que aumenta
+el peso de las cargas aguantado por la estructura.
+
+3) Observación: Comparar el crecimiento de las fuerzas ejercidas sobre los links cuando aumenta el peso sobre todas las juntas respecto al
+crecimiento cuando aumenta el peso únicamente sobre la junta del medio. Además:
+Hipótesis: Variar únicamente el peso de la carga sobre la junta del medio debería mantener la simetría de las fuerzas aplicadas sobre
+los links de toda la estructura.
+
+Finalmente, la hipótesis inicial planteada para la parte a) consistió en que, a medida que se incrementa el \emph{span} las fuerzas
+ejercidas aumentan también.
+
+(Aclaración: cuando decimos ''las fuerzas aumentan'' nos referimos al módulo de las mismas)
+

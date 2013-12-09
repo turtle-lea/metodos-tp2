@@ -182,10 +182,6 @@ vector<double> BandMatrix::resolver_sistema(){
 
 	inicializar_estructuras(res,diagonales,n);
 
-	for(int i=0; i<b.size(); i++) cout << b[i] << " ";
-	cout << endl;
-
-	mostrar();
 	//Algoritmo de triangulacion de matriz:	
 	for(int i=0; i<n; i++){
 		if(hayQueIterar(i,diagonales,e)){
@@ -242,15 +238,6 @@ vector<double> BandMatrix::resolver_sistema(){
 		}
 	}
 
-	// for(int i=0; i<diagonales.size();i++){
-		// cout << diagonales[i] << " ";
-	// }
-	// cout << endl;
-	// for(int i=0; i<11; i++){
-		// cout << elem[n-1][i] << " ";
-	// }
-	// cout << endl;
-	// mostrar();
 	backward_substitution(res, diagonales);
 	return res;
 }
