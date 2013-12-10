@@ -20,6 +20,8 @@ class BandMatrix{
 		bool hayQueIterar(int i,const vector<int>& diagonales, double e);
 		void backward_substitution(vector<double>&,vector<int>);
 		void inicializar_estructuras(vector<double>&, vector<int>&,int);
+		void cargar_n_igual_2(double cos_theta_1,double sen_theta_1, double cos_theta_2,double sen_theta_2, int n, vector<double>& cargas);
+		void cargar_n_mayor_2(double cos_theta_1,double sen_theta_1, double cos_theta_2,double sen_theta_2, int n, vector<double>& cargas);
 		vector<vector<double> > elem;
 		vector<double> b;
 		

@@ -5,7 +5,7 @@
 #include "../include/BandMatrix.h"
 using namespace std;
 
-BandMatrix::BandMatrix(double cos_theta_1,double sen_theta_1, double cos_theta_2,double sen_theta_2, int n, const vector<double> cargas){
+BandMatrix::BandMatrix(double cos_theta_1,double sen_theta_1, double cos_theta_2,double sen_theta_2, int n, vector<double> cargas){
 	vector<double> v;
 	for(int i = 0; i < n; i++){
 		elem.push_back(v);
@@ -14,6 +14,30 @@ BandMatrix::BandMatrix(double cos_theta_1,double sen_theta_1, double cos_theta_2
 		}
 	}
 	
+	if(n==8){
+		cargar_n_igual_2(cos_theta_1,sen_theta_2,cos_theta_2,sen_theta_2,n,cargas);
+	}else{	
+		cargar_n_mayor_2(cos_theta_1,sen_theta_2,cos_theta_2,sen_theta_2,n,cargas);
+	}
+
+	b.push_back(0.0);
+	b.push_back(0.0);
+	for(int i = 0; i < (n-4)/2; i++){
+		if((i%2) == 0){
+			b.push_back(0.0);
+			b.push_back(-cargas[i/2]);
+		}else{
+			b.push_back(0.0);
+			b.push_back(0.0);
+		}
+	}
+	b.push_back(0.0);
+	b.push_back(0.0);
+	
+	/* b = [0,0,0,c1,0,c2,0,c3...,0,cn/2-1,0,0] */
+}
+
+void BandMatrix::cargar_n_mayor_2(double cos_theta_1,double sen_theta_1, double cos_theta_2,double sen_theta_2, int n, vector<double>& cargas){
 	/** C0_h */
 	elem[0][3] = 1; //F0 = h0
 	elem[0][5] = 1; //F2
@@ -137,22 +161,42 @@ BandMatrix::BandMatrix(double cos_theta_1,double sen_theta_1, double cos_theta_2
 	
 	/** Construida la matriz rectangular elem */
 	/** Construimos el vector b acorde a la matriz */
+}
+
+void BandMatrix::cargar_n_igual_2(double cos_theta_1,double sen_theta_1, double cos_theta_2,double sen_theta_2, int n, vector<double>& cargas){
+
+	/** C0_h */
+	elem[0][3] = -1; //F0 = h0
+	elem[0][5] = 1; //F2
+	elem[0][6] = cos_theta_1; //cos(theta1)F3
 	
-	b.push_back(0.0);
-	b.push_back(0.0);
-	for(int i = 0; i < (n-4)/2; i++){
-		if((i%2) == 0){
-			b.push_back(0.0);
-			b.push_back(-cargas[i/2]);
-		}else{
-			b.push_back(0.0);
-			b.push_back(0.0);
-		}
-	}
-	b.push_back(0.0);
-	b.push_back(0.0);
+	/** C0_v */
+	elem[1][3] = 1; //F1
+	elem[1][5] = sen_theta_1; //sen(theta2)F3
 	
-	/* b = [0,0,0,c1,0,c2,0,c3...,0,cn/2-1,0,0] */
+	/** C1_h -> F2 y F5*/
+	elem[2][3] = -1; //F2
+	elem[2][6] = 1; //-F5
+	
+	/** C1_v -> F4*/
+	elem[3][4] = 1; //F4
+	
+	/** C2_h -> F3 F6 F7*/
+	elem[4][2] = -sen_theta_2; // - sen(theta2)*F3
+	elem[4][5] = sen_theta_2; //F2
+	
+	/** C2_v -> F3 F4 F6*/
+	elem[5][1] = -cos_theta_2; //-F4
+	elem[5][2] = -1; //-cos(theta2)F3
+	elem[5][4] = -cos_theta_2; //-cos(theta2)F6
+
+	/** Cn/2-1_h */
+	elem[n-2][2] = -1; // -Factual-1
+	elem[n-2][3] = -cos_theta_1; // -cos(theta1)Factual
+
+	/** Cn/2-1_v */
+	elem[n-1][2] = sen_theta_1; //sen(theta1)Factual-1
+	elem[n-1][3] = 1; //Factual
 }
 
 void BandMatrix::mostrar(){
@@ -210,7 +254,6 @@ vector<double> BandMatrix::resolver_sistema(){
 				aux_2 = diagonales[i];
 				diagonales[i] = diagonales[k_max+i] - k_max;	
 				diagonales[k_max+i] = aux_2+k_max;	
-				if((aux_2+k_max)>6) cout << "Diagonal peligrosa: " << i << endl;
 				
 				//swapeo el vector b
 				double aux_3;

@@ -21,7 +21,7 @@ pair<double,int> max(vector<double>& fuerzas){
 }
 
 int main(){
-	double l, h, aux;
+	double l, h, max_mod, c_pilar, aux;
 	int n;
 	vector<double> cargas;
 	vector<double> fuerzas;
@@ -37,20 +37,18 @@ int main(){
 			cin >> aux;
 			cargas.push_back(aux);
 		}
+		cin >> max_mod;
+		cin >> c_pilar;
 		cin >> c;
 	}
-	Bridge tito_puente(l,h,n,cargas);
-	//tito_puente.mostrar();
-	fuerzas = tito_puente.resolver_sistema();
-	//tito_puente.mostrar();
-	for(int i=0; i<fuerzas.size(); i++){
-		cout << fuerzas[i] << endl;
-	}
-	cout << endl;
-	res = max(fuerzas);
-	cout << res.first << " " << res.second << endl;
-	//cout << endl;
-	//cout << endl;
-	//tito_puente.mostrar();
+	Bridge tito_puente(l,h,n,cargas,max_mod,c_pilar);
+	cout << "Res: " << tito_puente.max_f_obt() << endl;
+	// fuerzas = tito_puente.resolver_sistema();
+	// for(int i=0; i<fuerzas.size(); i++){
+		// cout << fuerzas[i] << endl;
+	// }
+	// res = max(fuerzas);
+	// cout << res.first << " " << res.second << endl;
+	// tito_puente.heuristica();
 	return 0;
 }
