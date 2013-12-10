@@ -30,25 +30,35 @@ class Bridge{
 			longitud_total = (2*n-2)*(l/n) + (n-1)*h + n*sqrt((l/n)*(l/n)+h*h);
 
 			banda = new BandMatrix(cos_theta_1, sen_theta_1, cos_theta_2, sen_theta_2, 4*secciones, cargas);
-			vector<double> x = resolver_sistema();
-			max_fuerza_obtenida = max_valor(x);
+			sol_sistema = resolver_sistema();
+			max_fuerza_obtenida = max_valor(sol_sistema);
+			pilares_insertados = 0;
 		}
 		
 		~Bridge(){
 			delete banda;
 		}
 		
-		void mostrar();
 		vector<double> resolver_sistema(){return banda->resolver_sistema();}
 		double max_valor(vector<double>& fuerzas);
+		double costo_puente(){return longitud_total*max_fuerza_obtenida;}
+		int cant_pilares(){return pilares_insertados;}
 		bool seguro();
-		void heuristica();
+
+		pair< pair<double,bool>, vector<int> > heuristica();
+		pair<double,bool> heuristica_aux(vector<int>&);
+
 		double max_f_obt(){return max_fuerza_obtenida;}
+		vector<double> sol_sist(){return sol_sistema;}
+
+		int calcular_indice_insercion();
+		bool todas_iguales();
 
 	private:
 		double h;
 		double l;
 		int n;
+		int pilares_insertados;
 		double cos_theta_1;
 		double sen_theta_1;
 		double cos_theta_2;
@@ -59,6 +69,7 @@ class Bridge{
 		BandMatrix* banda;
 		
 		double max_fuerza_obtenida;
+		vector<double> sol_sistema;		
 
 		vector<double> cargas;		
 };

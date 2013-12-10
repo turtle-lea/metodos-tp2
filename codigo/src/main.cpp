@@ -25,7 +25,6 @@ int main(){
 	int n;
 	vector<double> cargas;
 	vector<double> fuerzas;
-	pair<double,int> res;
 	char c;
 	cin >> c;
 	while(c != '#'){
@@ -42,13 +41,19 @@ int main(){
 		cin >> c;
 	}
 	Bridge tito_puente(l,h,n,cargas,max_mod,c_pilar);
-	cout << "Res: " << tito_puente.max_f_obt() << endl;
 	// fuerzas = tito_puente.resolver_sistema();
-	// for(int i=0; i<fuerzas.size(); i++){
-		// cout << fuerzas[i] << endl;
-	// }
 	// res = max(fuerzas);
-	// cout << res.first << " " << res.second << endl;
-	// tito_puente.heuristica();
+	pair< pair<double,bool>, vector<int> > res = tito_puente.heuristica();
+
+	pair<double,bool> x = res.first;
+	cout << "El puente es: " << x.second << "seguro" << endl;
+	
+	vector<int> y = res.second;
+	for(int i=0; i<y.size(); i++){
+		cout << y[i] << endl;
+	}
+
+	cout << "El costo total del puente es: " << x.first << endl;
+	cout << "Cant pilares: " << y.size() << endl;
 	return 0;
 }
