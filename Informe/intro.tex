@@ -1,0 +1,38 @@
+	En este trabajo práctico se nos pidió analizar el comportamiento de un modelo de una estructura conocida como 
+puente Pratt Truss al simular la aplicación de peso sobre el mismo.
+	El modelo consiste en una representación en 2 dimensiones del puente. Llamamos \emph{span} al largo de la base 
+y \emph{h} a la altura del mismo. A su vez cuenta con una cantidad par \emph{n} de secciones, $2*n$
+juntas, $4*n-3$ links y 3 fuerzas adicionales que actúan sobre el puente, a las que llamamos $h_{0}$, $v_{0}$ y
+$v_{1}$.
+	A su vez, en las $(n-1)$ juntas inferiores centrales es posible insertar cargas que representan el peso 
+ejercido sobre dichas juntas.
+	Este modelo nos permite analizar la evolución del sistema al alterar cada uno de los distintos factores,
+como el \emph{span}, la altura y el peso de las cargas.
+	Concretamente el objetivo fue diseñar un algoritmo que, dada una instancia de puente Pratt Truss con una configuración de
+cargas iniciales calcule el valor de las fuerzas ejercidas sobre cada uno de los links.
+	Para ello planteamos un sistema de ecuaciones (la deducción del mismo aparece explicada en el desarrollo) y
+establecemos una equivalencia entre resolver el problema y hallar la solución de $Ax = b$.
+
+1) $A$ representa la forma en que interactúan los links sobre cada una de las juntas. Cada una de las filas de la matriz 
+representa una ecuación de fuerzas que actúan sobre la junta (una para el plano vertical y otra para el horizontal). Sabemos
+que las fuerzas actuantes en cada plano para cada junta deben estar en equilibrio.
+
+2) \emph{x} es el vector de $4n$ fuerzas que constituyen las incógnitas de nuestro problema.
+
+3) \emph{b} es un vector de $4n$ valores. Estas fuerzas intervienen en las ecuaciones mencionadas en el punto (1). Las fuerzas
+actuantes en cada plano para cada junta deben estar en equilibrio (Es decir, la suma de las mismas debe ser igual a 0). Las
+cargas forman parte de este vector (actúan sobre el plano vertical). Los valores de \emph{b} para las ecuaciones
+correspondientes al plano horizontal son iguales a 0.
+
+Es posible demostrar que la matriz \emph{A} cumple la propiedad de ser banda $p,(q+p)$. Por lo tanto utilizamos en nuestros
+algoritmos una representación que nos permite ganar eficiencia en cuestiones de tiempo y espacio.
+El método seleccionado para resolver el problema fue Eliminación Gaussiana con pivoteo parcial. Una buena explicación del
+mismo puede ser encontrada en el libro ''Numerical analysis'',\emph{Burden, Faires}. El método implementado está adaptado
+a la representación de la matriz elegida.
+
+	La última parte del trabajo consistió en desarrollar un método heurístico para aplicar en los casos donde el 
+máximo de los módulos de las fuerzas halladas supere cierto valor (parámetro de entrada). La idea es
+modificar la estructura insertando pilares (y de esta manera generando subestructuras)
+para tratar de reducir la magnitud de las fuerzas ejercidas sobre los links, aunque evitando insertar pilares innecesarios
+ya que los mismos son costosos. Una heurística es un algoritmo que, si bien no necesariamente encuentra la solución óptima
+a nuestro problema (por ejemplo, porque esto podría ser muy costoso) propone una solución aceptable.

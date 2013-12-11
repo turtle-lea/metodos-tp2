@@ -1,0 +1,21 @@
+	Los experimentos realizados demuestran que las magnitudes de las fuerzas aplicadas sobre los links de la estructura
+varían en función del largo de la estructura, de la cantidad de secciones, del peso de las cargas y de la distribución
+de las mismas (No es lo mismo concentrar gran parte del peso en el medio de la estructura, que sobre uno de los extremos,
+o de manera uniforme). En particular las magnitudes aumentan para estructuras con un \emph{span} más largo y, lógicamente,
+cuando se aplica más peso sobre la misma.
+
+	La heurística constituye una buena solución a nuestro problema,
+ya que se basa en los experimentos mencionados anteriormente. Intenta eliminar las cargas más pesadas (mayores en módulo)
+reemplazándolas por pilares, y en el caso de que el peso esté uniformemente distribuído ubica un pilar en el medio,
+reduciendo el \emph{span} de ambas subestructuras. Sin embargo hay casos en donde no puede generar un puente seguro,
+pero ningún otro algoritmo podría. Por ejemplo, un puente de tan solo 2 secciones en donde la única carga aplicada
+es demasiado pesada. (2 es la mínima cantidad de secciones de un puente ''Prat Truss'').
+
+	Aplicar ''Eliminación Gaussiana'' para resolver un problema concreto de la vida real resultó motivante y de gran
+interés. En suma, encontrar una buena representación de la matriz banda y luego adaptar el método fue un desafío
+bastante grande.
+
+	Finalmente podemos mencionar que la primera parte del trabajo, en donde planteamos el sistema e inicializamos
+la matriz fue sin dudas la más difícil, ya que es un procedimiento que hicimos de forma casi ''manual'', y por lo
+tanto encontrar
+errores en esta parte del código resultó ser una tarea ardua y trabajosa.

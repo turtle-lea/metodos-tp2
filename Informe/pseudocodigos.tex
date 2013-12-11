@@ -1,0 +1,59 @@
+\subsection{Eliminación Gaussiana de la matriz banda}
+
+{\tiny
+
+\lstset{caption=Pseudocódigo Eliminación Gaussiana con matriz banda, label= Pseudocódigo Eliminación Gaussiana con matriz banda, framexleftmargin=2mm, frame=shadowbox, rulesepcolor=\color{black}, language={[ANSI]C}}
+\lstinputlisting[language=C++]{pseudocodigo/banda.cpp}
+
+}
+
+~
+
+{\normalsize
+Aclaraciones respecto al método de Eliminación Gaussiana:
+
+Las funciones ''cargar\_n\_igual'' son las que inicializan la matriz con los valores correctos.
+
+En resolver sistema mantenemos un vector de diagonales, donde $diagonales_{i}$
+guarda la posición de la diagonal del elemento $i$ (inicialmente 3). Cuando se realiza el swapeo de filas, las diagonales
+cambian.
+}
+
+\subsection{Heurística}
+
+Antes de empezar, hagamos un repaso de las estructuras auxiliares para resolver la heurística:
+
+{\tiny
+
+\lstset{caption= Estructuras de la heurística, label= Estructuras de la heurística, framexleftmargin=2mm, frame=shadowbox, rulesepcolor=\color{black}, language={[ANSI]C}}
+\lstinputlisting[language=C++]{pseudocodigo/estructuras.h}
+
+}
+
+{\tiny
+
+\lstset{caption=Pseudocódigo de la heurística , label= Pseudocódigo de la heurística, framexleftmargin=2mm, frame=shadowbox, rulesepcolor=\color{black}, language={[ANSI]C}}
+\lstinputlisting[language=C++]{pseudocodigo/heuristica.cpp}
+
+}
+
+~
+
+Aclaraciones respecto de la heurística:
+
+La salida del método es un pair< pair<double costoTotal,bool esSeguro>, vector<int> posicionesPilares>, donde
+costoTotal es el costo total del puente: costo de los cp\_e + $k$*costo\_pilar, siendo $k$ la cantidad de pilares insertados.
+
+esSeguro indica si el puente formado por todas las sub-estructuras es seguro o no. En el caso de no serlo no significa
+que la heurística sea mala (ya que en el peor caso, nuestro algoritmo genera muchos puentes de 2 secciones), sino
+que indica que a pesar de todo la inserción de pilares no pudo contrarrestar el peso de las cargas. Recordemos
+el caso de un puente de 2 secciones con su única carga muy pesada (la heurística no puede hacer nada al respecto).
+
+posicionesPilares contiene las posiciones ''relativas'' de los pilares insertados. Es decir, si por ejemplo divido el puente
+en 2, y luego divido la mitad derecha en 2, la pisición absoluta del tercer pilar es $\frac{3}{4}$. Sin embargo, en el 
+vector queda guardado $\frac{1}{2}$, ya que se insertó en la mitad del puente derecho. Sin embargo, lo que importa es que
+el tamaño de este vector determina la cantidad de pilares insertados.
+
+Finalmente: calcular\_indice\_insercion se comporta acorde a como había sido presentado. En el caso de que el peso de las
+cargas sea uniforme intenta ubicar el pilar en el medio de la estructura (cuidándose de que queden 2 sub-estructuras
+válidas). En caso contrario, intenta ubicar un pilar que reemplace la carga más pesada.

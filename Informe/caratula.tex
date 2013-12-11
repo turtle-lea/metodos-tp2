@@ -1,19 +1,3 @@
-\begin{center}
-	Universidad de Buenos Aires - Departamento de Computaci\'on - FCEN
-\end{center}
-
-\rule{\linewidth}{0.5mm}
-
-\vspace{1cm}
-
-\begin{center}
-	\Huge{Trabajo Práctico de Métodos Númericos}
-\end{center}
-
-
-\vspace{4cm}
-
-
 Integrantes:
 \begin{itemize}
 	\item Castro, Dami\'an L.U.: 326/11  \verb+ltdicai@gmail.com+
@@ -22,13 +6,35 @@ Integrantes:
 	
 \end{itemize}
 
+\vspace{0.5cm}
 
-\maketitle
+\begin{abstract} 
+	El siguiente trabajo práctico tiene como objetivo analizar el comportamiento de la representación de una estructura 
+llamada
+puente \emph{''Pratt Truss''} al realizar experimentos en donde variamos distintos factores que pueden modificar su
+comportamiento, como por ejemplo el peso ejercido sobre el puente, el largo del mismo, la altura, etc. Para trasladar
+nuestro problema hacia el campo de los métodos numéricos generamos un modelo matemático de
+representación y establecemos una equivalencia entre encontrar la solución de nuestro problema y resolver el sistema
+$Ax = b$, en donde $A \in R^{nxn}$, $x \in R^{n}$ y $b \in R^{n}$.
 
-\vspace{4cm}
+	El método elegido para la resolución del sistema es ''Eliminación Gaussiana'' con pivoteo parcial.
+Demostramos que debido a las condiciones particulares del modelo y del problema,
+	 la matriz resultante es banda $p,(q+p)$ por lo
+que aprovechamos este aspecto para implementar un algoritmo más eficiente en cuanto a tiempo y memoria. 
+
+	Finalmente implementamos un método heurístico para los casos en donde nuestro análisis detecta una estructura
+insegura (esto sucede cuando una fuerza superior a la máxima soportada es ejercida sobre uno de los links del puente).
+El algoritmo se basa en la inserción de pilares para generar sub-estructuras más estables, aunque intentando minimizar
+la cantidad de inserciones ya que es un procedimiento costoso.
+\end{abstract}
+
+\vspace{0.5cm}
 
 Palabras Clave:
-%\begin{itemize}
-	
-%\end{itemize}
+\begin{itemize}
+	\item Puente ''Prat Truss''
+	\item Eliminación Gaussiana con pivoteo parcial	
+	\item Matriz banda $p,q$
+	\item Heurística
+\end{itemize}
 

@@ -137,3 +137,18 @@ i-ésima columna tenemos que:
 
 Como el resto de las filas no han sido modificadas, podemos afirmar que $b^{i}$ es banda p,(p+q). 
 Demostrado paso inductivo $\square$
+
+~
+
+Aprovechando la propiedad que acabamos de mostrar, para almacenar nuestra matriz banda 3,(3+4) utilizamos una
+matriz (en nuestro caso vector de vectores) de $4*n$ filas y 11 columnas. Inicialmente las diagonales corresponden
+a la tercera columna de cada fila.
+
+\begin{figure}[!h]
+	\begin{center}
+		  \includegraphics[scale=0.5]{Imagenes/im_13.pdf}
+		  \caption{Representación de la matriz banda en nuestro código}
+		  \label{fig:contra1}
+	\end{center}
+\end{figure}
+\FloatBarrier

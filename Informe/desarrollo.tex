@@ -1,3 +1,20 @@
 \input{desarrollo_1.tex}
 \input{desarrollo_propiedad.tex}
 \input{experimentacion.tex}
+
+\subsection{Heurística}
+
+Finalmente, luego de realizar la experimentación procedimos a implementar el método heurístico. El mismo se basa fuertemente
+en los resultados experimentales obtenidos.
+
+La idea es la siguiente:
+
+- Cuando las cargas están distribuídas de manera uniforme se intenta ubicar un pilar en el medio para intentar reducir el
+\emph{span} de ambas sub-estructuras (ya que la magnitud de las fuerzas aumenta con el \emph{span}).
+
+- Por el contrario, cuando hay una carga mayor en módulo que las demás se intenta ubicar un pilar en dicha posición,
+ya que el link más afectado probablemente esté en un lugar cercano a la junta sobre la cual se aplica la carga.
+
+\subsection{Aclaraciones}
+
+Incluímos al final del informe los pseudocódigos de las funciones relacionadas con la matriz banda y de la heurística.

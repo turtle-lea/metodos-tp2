@@ -7,19 +7,6 @@
 
 using namespace std;
 
-pair<double,int> max(vector<double>& fuerzas){
-	pair<double,int> res;
-	double max = 0;
-	for(int i=0; i<fuerzas.size(); i++){
-		if(abs(fuerzas[i])>max){
-			max = abs(fuerzas[i]);
-			res.first = max;
-			res.second = i;
-		}
-	}
-	return res;
-}
-
 int main(){
 	double l, h, max_mod, c_pilar, aux;
 	int n;
@@ -46,14 +33,29 @@ int main(){
 	pair< pair<double,bool>, vector<int> > res = tito_puente.heuristica();
 
 	pair<double,bool> x = res.first;
-	cout << "El puente es: " << x.second << "seguro" << endl;
-	
-	vector<int> y = res.second;
-	for(int i=0; i<y.size(); i++){
-		cout << y[i] << endl;
+	bool esSeguro = x.second;
+
+	if(esSeguro){
+		cout << "El puente resultante es seguro" << endl;
+	}else{
+		cout << "Cuidado ! La estructura resultante no es segura" << endl;
 	}
+	cout << endl;
+
+	vector<int> y = res.second;
 
 	cout << "El costo total del puente es: " << x.first << endl;
-	cout << "Cant pilares: " << y.size() << endl;
+	cout << "La cantidad de pilares insertados es: " << y.size() << endl;
+	cout << endl;
+
+	if(y.size() == 0){
+		cout << "Como se insertaron 0 pilares mostramos la solución del sistema:" << endl;
+		cout << endl;
+
+		vector<double> sol = tito_puente.sol_sist();	
+		for(int i=0; i<sol.size(); i++){
+			cout << sol[i] << endl;
+		}
+	}
 	return 0;
 }
