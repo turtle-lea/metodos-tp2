@@ -7,7 +7,7 @@
 Finalmente, luego de realizar la experimentación procedimos a implementar el método heurístico. El mismo se basa fuertemente
 en los resultados experimentales obtenidos.
 
-La idea es la siguiente:
+La idea es la siguiente. En el caso de que la estructura no sea segura:
 
 - Cuando las cargas están distribuídas de manera uniforme se intenta ubicar un pilar en el medio para intentar reducir el
 \emph{span} de ambas sub-estructuras (ya que la magnitud de las fuerzas aumenta con el \emph{span}).
@@ -15,6 +15,70 @@ La idea es la siguiente:
 - Por el contrario, cuando hay una carga mayor en módulo que las demás se intenta ubicar un pilar en dicha posición,
 ya que el link más afectado probablemente esté en un lugar cercano a la junta sobre la cual se aplica la carga.
 
-\subsection{Aclaraciones}
+De esta manera proponemos una solución recursiva. Habiendo insertado el pilar tomando una u otra decisión verificamos
+si ambas sub-estructuras (puente izquierdo y derecho) son seguras. En el caso de serlo el algoritmo termina. En el caso
+de que alguna (o ambas) no lo sea/n repetimos el proceso.
 
-Incluímos al final del informe los pseudocódigos de las funciones relacionadas con la matriz banda y de la heurística.
+El caso base corresponde a $n=2$ (cantidad de secciones mínima que puede tener un puente \emph{Pratt Truss})
+
+~
+
+\begin{algorithmic}
+\Function{Heuristica}{}
+	\State list<int> posiciones = vacia()
+	\State tupla<$bool$ esSeguro, $double$ costoTotal, $list$ posicionesPilares> res
+	\State <res.first,res.second> = heuristica\_aux(\&posiciones)
+	\State (En \emph{posiciones} van a guardarse los indices relativos de inserción)
+	\State res.first = res.first + posiciones.size()*costo\_pilar
+	\State (Sumo los costos de haber agregado los pilares)
+	\State \emph{res.posicionesPilares = posiciones}
+	\State \emph{return res}
+\EndFunction
+\end{algorithmic}
+
+~
+
+\begin{algorithmic}
+\Function{Heuristica\_aux}{\emph{list} \&posiciones}
+	\State tupla<$bool$ esSeguro, $double$ costoTotal> res
+	\State CASO BASE
+	\If{$cant\_secciones == n$}
+		\State res.esSeguro = seguro() (Se fija si alguna de las fuerzas 
+		\State de la solución del problema supera el máximo permitido)
+		\State res.costoTotal = longitud\_total\_puente * max\_fuerza\_obtenida
+	\Else
+		\State Otro caso base. Corta la recursión porque se ha alcanzado una subestructura segura
+		\If{seguro()}
+			\State res.esSeguro = true
+			\State res.costoTotal = longitud\_total\_puente * max\_fuerza\_obtenida
+		\Else
+			\State (La estructura es insegura. Hay que crear 2 subestructuras
+			\State y llamar recursivamente a la función para ambas.
+			\State Finalmente combinar los resultados)
+			\State int i = calcular\_indice\_insercion()
+			\State c\_1 = cargas[0..(i-1)] (Cargas hasta la (i-1)-ésima)
+			\State c\_2 = cargas[(i+1) .. cargas.size()]
+			\State l\_1 = (largo/cant\_secciones) * (i+1) (Largo del puente izq.)
+			\State l\_2 = (largo/cant\_secciones) * (cargas.size()-i) (Largo del puente izq.)
+			\State b\_izq = Bridge(l\_1,h,(i+1), c\_1,max\_modulo,costo\_pilar)
+			\State (Creo puente izquierdo con las \emph{span}, \emph{h}, 
+			\State cant\_secciones, cargas correspondientes, max\_modulo y costo\_pilar)
+			\State b\_der = Bridge(l\_2,h,(cargas.size()-i), c\_2,max\_modulo,costo\_pilar)
+			\State (Creo puente derecho)
+			\State tupla<$bool$ esSeguro, $double$ costoTotal> r\_1 = b\_izq.heuristica\_aux(posiciones)
+			\State tupla<$bool$ esSeguro, $double$ costoTotal> r\_2 = b\_der.heuristica\_aux(posiciones)
+			\State res.esSeguro = r\_1.esSeguro $\wedge$ r\_2.esSeguro
+			\State (el puente es seguro si ambas subestructuras lo son)
+			\State res.costoTotal = r\_1.costoTotal $\wedge$ r\_2.costoTotal
+			\State (el costo del puente es la suma de ambos costos de los sub-puentes)
+		\EndIf	
+
+	\EndIf
+	\State return res
+\EndFunction
+\end{algorithmic}
+
+~
+
+Incluímos en la sección ''Fragmentos de código'' las principales funciones relacionadas con la heurística.
+

@@ -1,15 +1,38 @@
+	La primera parte del trabajo consistió en transformar nuestro problema del mundo real a otro perteneciente al
+campo de los métodos numéricos mediante un modelo matemático. A partir de este modelo pudimos demostrar propiedades
+particulares del sistema que se ven reflejados en nuestros algoritmos. Sin lugar a dudas el hecho de que la matriz
+resultante con la que trabajamos sea banda $p,(q+p)$ es una de estas propiedades, y resulta crucial a lo largo del 
+tp.
+	
+	Notemos que la primera matriz obtenida al adaptar la instancia de puente
+recibida como parámetro a nuestro modelo cumple la propiedad de ser banda $p,q$ sin importar el tama\~no de la instancia.
+Es decir, ya sea que tratemos con un puente de 2 o de 10000 secciones, las bandas de nuestra matriz no cambian.
+
+	En suma, en uno de los primeros puntos se nos pidió demostrar que luego de la Eliminación Gaussiana, la matriz
+resultante es banda $p,(q+p)$. Por lo tanto, la propiedad de ser banda sobrevive luego de triangular el sistema.
+
+	Estos 2 hechos nos permiten obtener importantísimas ventajas a nivel de eficiencia tanto temporal como espacial
+a la hora de resolver nuestro problema, ya que reducimos instancias de tama\~no $n^2$ a $n*11$. Por lo tanto, nuestro
+método es capaz de resolver instancias realmente grandes en muy poco tiempo y utilizando poca memoria.
+
 	Los experimentos realizados demuestran que las magnitudes de las fuerzas aplicadas sobre los links de la estructura
 varían en función del largo de la estructura, de la cantidad de secciones, del peso de las cargas y de la distribución
 de las mismas (No es lo mismo concentrar gran parte del peso en el medio de la estructura, que sobre uno de los extremos,
 o de manera uniforme). En particular las magnitudes aumentan para estructuras con un \emph{span} más largo y, lógicamente,
 cuando se aplica más peso sobre la misma.
 
-	La heurística constituye una buena solución a nuestro problema,
-ya que se basa en los experimentos mencionados anteriormente. Intenta eliminar las cargas más pesadas (mayores en módulo)
+	
+Para construír la heurística nos basamos en los experimentos mencionados anteriormente. 
+Intenta eliminar las cargas más pesadas (mayores en módulo)
 reemplazándolas por pilares, y en el caso de que el peso esté uniformemente distribuído ubica un pilar en el medio,
 reduciendo el \emph{span} de ambas subestructuras. Sin embargo hay casos en donde no puede generar un puente seguro,
 pero ningún otro algoritmo podría. Por ejemplo, un puente de tan solo 2 secciones en donde la única carga aplicada
 es demasiado pesada. (2 es la mínima cantidad de secciones de un puente ''Prat Truss'').
+Creemos que haber planteado una solución recursiva fue una de las mejores decisiones, ya que al dividir
+el puente en 2 sub-estructuras válidas permite la reutilización de código con todas las ventajas que eso implica.
+Se salvan las propiedades que cumple la estructura original, por lo que nuevamente podemos resolver los
+problemas del sub-puente izquierdo y sub-puente derecho con matrices banda $4,7$.
+A su vez el código resulta claro e intuitivo, basado en los resultados experimentales.
 
 	Aplicar ''Eliminación Gaussiana'' para resolver un problema concreto de la vida real resultó motivante y de gran
 interés. En suma, encontrar una buena representación de la matriz banda y luego adaptar el método fue un desafío

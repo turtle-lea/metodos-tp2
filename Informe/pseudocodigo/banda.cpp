@@ -1,7 +1,12 @@
+
+//Creacion de la matriz banda. Las funciones cargar_n_igual_{cant_secciones}
+//inicializan los valores de las posiciones
+
 BandMatrix::BandMatrix(double cos_theta_1,double sen_theta_1, 
 
 	double cos_theta_2,double sen_theta_2, int n, vector<double> cargas){
 
+	//Creo la matriz banda, n filas y 11 columnas
 	vector<double> v;
 	for(int i = 0; i < n; i++){
 		elem.push_back(v);
@@ -22,6 +27,7 @@ BandMatrix::BandMatrix(double cos_theta_1,double sen_theta_1,
 			cos_theta_2,sen_theta_2,n,cargas);
 	}
 
+	//Cargo el vector b, ubicando las cargas donde corresponde
 	b.push_back(0.0);
 	b.push_back(0.0);
 	for(int i = 0; i < (n-4)/2; i++){
@@ -38,23 +44,31 @@ BandMatrix::BandMatrix(double cos_theta_1,double sen_theta_1,
 }
 
 
+
+//Algoritmo de ELIMINACION GAUSSIANA con pivoteo parcial
 vector<double> BandMatrix::resolver_sistema(){
 	vector<double> res;
 	vector<int> diagonales;
+	//Tolerancia para no igualar a 0
 	double e = 0.0000000001;
 	int n = b.size();
 
+	//Incializo el vector de DIAGONALES en 3 para
+	//cada posicion, y el vector res en 0.
 	inicializar_estructuras(res,diagonales,n);
 
 	//Algoritmo de triangulacion de matriz:	
 	for(int i=0; i<n; i++){
+		//Si es necesario hacer un paso de Gauss.
+		//Si hay un cero en la columna i, debajo de 
+		//la fila i (Solo es necesario revisar hasta i+4)
 		if(hayQueIterar(i,diagonales,e)){
 			double elem_diagonal = elem[i][diagonales[i]];			
 			if(abs(elem_diagonal)<e){
 				double max = abs(elem_diagonal);
 				int k_max = 0;
 	
-				//Encuentro la fila para swapear
+				//Encuentro la fila para pivotear
 				for(int k=0; k<=3 && ((k+i)<n); k++){
 					if((diagonales[i+k]-k)>=0){
 						if(abs(elem[i+k][diagonales[i+k]-k]) > abs(max)){

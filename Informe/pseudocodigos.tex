@@ -15,7 +15,8 @@ Aclaraciones respecto al método de Eliminación Gaussiana:
 Las funciones ''cargar\_n\_igual'' son las que inicializan la matriz con los valores correctos.
 
 En resolver sistema mantenemos un vector de diagonales, donde $diagonales_{i}$
-guarda la posición de la diagonal del elemento $i$ (inicialmente 3). Cuando se realiza el swapeo de filas, las diagonales
+guarda la posición de la diagonal del elemento $i$ (inicialmente 3). 
+Esto es necesario porque cada vez que realizo swapeo de filas, las diagonales
 cambian.
 }
 
@@ -56,4 +57,6 @@ el tamaño de este vector determina la cantidad de pilares insertados.
 
 Finalmente: calcular\_indice\_insercion se comporta acorde a como había sido presentado. En el caso de que el peso de las
 cargas sea uniforme intenta ubicar el pilar en el medio de la estructura (cuidándose de que queden 2 sub-estructuras
-válidas). En caso contrario, intenta ubicar un pilar que reemplace la carga más pesada.
+válidas). En caso contrario, intenta ubicar un pilar que reemplace la carga más pesada. Contiene varios \emph{ifs} para
+cuidar los casos borde: solo puede ubicar los pilares donde hay cargas de índice impar (comenzando la numeración
+desde 0.)
